@@ -31,6 +31,10 @@ export default new Router({
       title: '系统注册',
       component: Register
     }, {
+      path: '/user',
+      name: 'Users',
+      component: Users
+    }, {
       path: '/user/:name',
       name: 'Users',
       component: Users
