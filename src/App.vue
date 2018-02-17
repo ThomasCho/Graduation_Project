@@ -1,12 +1,12 @@
 <template>
   <div id="app">
     <el-container>
-      <el-header>
+      <el-header v-show="showHeader">
         <router-link to="register" replace>
           <span>注册</span>
         </router-link>
       </el-header>
-      <el-main>
+      <el-main :style="{height: showHeader ? '87vh' : '100vh'}">
         <router-view></router-view>
       </el-main>
     </el-container>
@@ -15,13 +15,18 @@
 
 <script>
   export default {
-    name: 'App'
+    name: 'App',
+    data () {
+      return {
+        showHeader: this.$route.path !== '/'
+      }
+    }
   }
 </script>
 
 <style>
   #app {
-    font-family: 'Avenir', Helvetica, Arial, sans-serif;
+    font-family: helvetica,arial,微软雅黑,华文黑体;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     text-align: center;
@@ -42,6 +47,5 @@
     text-align: center;
     line-height: 160px;
     padding: 0;
-    height: 87vh;
   }
 </style>
