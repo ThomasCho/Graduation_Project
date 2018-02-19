@@ -18,7 +18,7 @@
     name: 'App',
     data () {
       return {
-        showHeader: this.$route.path !== '/'
+        showHeader: this.$route.path !== '/' && this.$route.path !== '/login'
       }
     }
   }

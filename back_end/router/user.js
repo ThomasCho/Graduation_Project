@@ -6,7 +6,6 @@ const User = require('../models/user')
 // 查询所有用户
 router.get('/user', (req, res) => {
   User.find({})
-    .sort({update_at: -1})
     .then(users => {
       res.json(users)
     })

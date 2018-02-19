@@ -4,11 +4,12 @@
       <span>帐号密码登录</span>
 
       <el-form ref="form" :model="form" :rules="rules">
-        <el-form-item prop="name">
-          <el-input v-model="form.name" placeholder="账号"></el-input>
+        <el-form-item prop="email">
+          <el-input v-model="form.email" placeholder="账号"></el-input>
         </el-form-item>
-        <el-form-item prop="psw">
-          <el-input v-model="form.psw" placeholder="密码"></el-input>
+        <el-form-item prop="password">
+          <el-input v-model="form.password" placeholder="密码"
+                    @keyup.enter.native="onLogin" type="password"></el-input>
         </el-form-item>
         <el-form-item>
           <el-button type="primary" @click="onLogin" class="login-page-form_btn">登录</el-button>
@@ -24,14 +25,14 @@
     data () {
       return {
         form: {
-          name: '',
-          psw: ''
+          email: '',
+          password: ''
         },
         rules: {
-          name: [
+          email: [
             { required: true, message: '请输入账号'},
           ],
-          psw: [
+          password: [
             { required: true, message: '请输入密码'}
           ]
         }
@@ -41,10 +42,19 @@
       onLogin () {
         this.$refs.form.validate((valid) => {
           if (valid) {
-            alert('submit!');
+            this.$store.dispatch('LoginByEmail', this.form).then((res) => {
+              if (res.success) {
+                this.$message.success('登录成功')
+                this.$router.push({ path: '/main' })
+              } else {
+                this.$message.error(res.message)
+              }
+            }).catch(err => {
+              this.$message.error(err)
+            })
           } else {
-            this.$message.error('请输入账号和密码');
-            return false;
+            this.$message.error('请输入账号和密码')
+            return false
           }
         })
       }
