@@ -1,6 +1,10 @@
 const mongoose = require('mongoose')
 
 const userSchema = mongoose.Schema({
+  email: {
+    type: String,
+    require: true
+  },
   name: {
     type: String,
     require: true
@@ -13,11 +17,11 @@ const userSchema = mongoose.Schema({
     type: Date,
     require: true
   },
-  description: {
+  introduction: {
     type: String,
     require: true
   },
-  pictureLink: {
+  avatar: {
     type: String,
     require: false
   },

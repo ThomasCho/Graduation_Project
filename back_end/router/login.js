@@ -11,8 +11,7 @@ router.post('/loginbyemail', (req, res) => {
   User.find({
     email: req.body.email
   }, (err, user) => {
-    console.log(user)
-    user = JSON.parse(JSON.stringify(user[0]))
+    user = JSON.parse(JSON.stringify(user[0])) // 深拷贝
     if (err) {
       res.json('error: ' + err)
     }
@@ -29,35 +28,20 @@ router.post('/loginbyemail', (req, res) => {
           message: '认证失败，密码错误'
         })
       } else {
-        // 密码正确，创建token
-        let token = jwt.sign(user, 'app.get(superSecret)', {
+        // 密码正确，创建token；hellothomas 是生成json token的密码
+        let token = jwt.sign(user, 'hellothomas', {
           expiresIn: '1h' // 设置过期时间
         })
 
         // json格式返回token
         res.json({
           success: true,
-          message: 'Enjoy your token!',
+          message: user,
           token: token
         })
       }
     }
   })
-
-  // User.find({}, (error, users) => {
-  //   let data = JSON.parse(JSON.stringify(users))
-  //   if (error) {
-  //     res.json('error: ' + error)
-  //   } else {
-  //     for (let user of data) {
-  //       if (user.email === req.body.email) {
-  //         res.json(user.password === req.body.password ? 'success' : 'fail')
-  //         return
-  //       }
-  //     }
-  //     res.json('无此用户')
-  //   }
-  // })
 })
 
 module.exports = router

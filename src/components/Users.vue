@@ -21,13 +21,7 @@
     },
     methods: {
       getAllUsers () {
-        this.$http.get('/api/user')
-          .then(res => {
-            this.users = res.data;
-          })
-          .catch(err => {
-            this.$message.error(err.message);
-          })
+
       }
     }
   }

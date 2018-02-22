@@ -12,13 +12,6 @@ export function loginByEmail (email, password) {
   })
 }
 
-export function logout () {
-  return fetch({
-    url: 'api/login/logout',
-    method: 'post'
-  })
-}
-
 export function getInfo (token) {
   return fetch({
     url: 'api/user/info',

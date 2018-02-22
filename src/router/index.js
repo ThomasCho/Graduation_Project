@@ -47,7 +47,7 @@ export default new Router({
       component: Users
     },
     {
-      path: '/user/:name',
+      path: '/user/:email',
       name: 'Users',
       component: Users
     },
