@@ -5,17 +5,26 @@ const User = require('../models/user')
 
 // 获取当前登录用户的信息
 router.get(/user\/info/, (req, res) => {
-  res.json(req.api_user)
+  res.json({
+    success: true,
+    message: req.api_user
+  })
 })
 
 // 查询所有用户
 router.get('/user', (req, res) => {
   User.find({})
     .then(users => {
-      res.json(users)
+      res.json({
+        success: true,
+        message: users
+      })
     })
     .catch(err => {
-      res.json(err)
+      res.json({
+        success: false,
+        message: err
+      })
     })
 })
 
@@ -25,10 +34,16 @@ router.get('/user/:email', (req, res) => {
     email: req.params.email
   })
     .then(user => {
-      res.json(user)
+      res.json({
+        success: true,
+        message: user
+      })
     })
     .catch(err => {
-      res.json(err)
+      res.json({
+        success: false,
+        message: err
+      })
     })
 })
 
@@ -37,9 +52,15 @@ router.post('/user', (req, res) => {
   // 使用User model上的create方法储存数据
   User.create(req.body, (err, user) => {
     if (err) {
-      res.json(err)
+      res.json({
+        success: false,
+        message: err
+      })
     } else {
-      res.json(user)
+      res.json({
+        success: true,
+        message: user
+      })
     }
   })
 })
@@ -59,8 +80,14 @@ router.put('/user/:email', (req, res) => {
     }, {
       new: true
     })
-    .then(user => res.json(user))
-    .catch(err => res.json(err))
+    .then(user => res.json({
+      success: true,
+      message: user
+    }))
+    .catch(err => res.json({
+      success: false,
+      message: err
+    }))
 })
 
 // 删除一个用户
@@ -68,8 +95,14 @@ router.delete('/user/:email', (req, res) => {
   User.findOneAndRemove({
     email: req.params.email
   })
-    .then(user => res.send(`${user.title}删除成功`))
-    .catch(err => res.json(err))
+    .then(user => res.send({
+      success: true,
+      message: `${user.title}删除成功`
+    }))
+    .catch(err => res.json({
+      success: false,
+      message: err
+    }))
 })
 
 module.exports = router

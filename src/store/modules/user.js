@@ -59,13 +59,17 @@ const user = {
     GetInfo ({ commit, state }) {
       return new Promise((resolve, reject) => {
         getInfo(state.token).then(response => {
-          commit('SET_NAME', response.data.name)
-          commit('SET_AVATAR', response.data.avatar)
-          commit('SET_INTRODUCTION', response.data.introduction)
-          commit('SET_CONSTELLATION', response.data.constellation)
-          commit('SET_GENDER', response.data.gender)
-          commit('SET_BIRTHDAY', response.data.birthday)
-          resolve(response.data)
+          if (response.data.success) {
+            commit('SET_NAME', response.data.message.name)
+            commit('SET_AVATAR', response.data.message.avatar)
+            commit('SET_INTRODUCTION', response.data.message.introduction)
+            commit('SET_CONSTELLATION', response.data.message.constellation)
+            commit('SET_GENDER', response.data.message.gender)
+            commit('SET_BIRTHDAY', response.data.message.birthday)
+            resolve(response.data.message)
+          } else {
+            reject(response.data.message)
+          }
         }).catch(error => {
           reject(error)
         })

@@ -2,9 +2,9 @@ import Vue from 'vue'
 import Router from 'vue-router'
 import Login from '@/components/Login'
 import Users from '@/components/Users'
-import Register from '@/components/Register'
 import Main from '@/components/Main'
 import Error from '@/components/Error'
+import Account from '@/components/account'
 
 Vue.use(Router)
 
@@ -36,10 +36,10 @@ export default new Router({
       component: Main
     },
     {
-      path: '/register',
-      name: 'register',
-      title: '系统注册',
-      component: Register
+      path: '/account',
+      name: 'account',
+      title: '账号资料',
+      component: Account
     },
     {
       path: '/user',

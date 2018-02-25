@@ -7,10 +7,12 @@ import store from './store'
 import ElementUI from 'element-ui'
 import 'element-ui/lib/theme-chalk/index.css'
 import './routerControl.js'
+import fetch from './util/fetch'
 
 Vue.use(ElementUI)
 
 Vue.config.productionTip = false
+Vue.prototype.fetch = fetch
 
 /* eslint-disable no-new */
 const vue = new Vue({

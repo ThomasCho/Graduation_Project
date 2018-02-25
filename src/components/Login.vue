@@ -80,6 +80,7 @@
     text-align: center;
     font-size: 20px;
     border-radius: 4px;
+    box-shadow: 0 0 50px #888888;
   }
   .login-page-form_btn {
     width: 100%;

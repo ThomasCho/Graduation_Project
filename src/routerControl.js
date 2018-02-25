@@ -1,5 +1,6 @@
 import router from './router'
 import store from './store'
+import Vue from 'vue'
 
 const whiteList = ['/login', '/authredirect'] // 不重定向白名单
 router.beforeEach((to, from, next) => {
@@ -11,7 +12,8 @@ router.beforeEach((to, from, next) => {
       store.dispatch('GetInfo').then(() => {
         next()
       }).catch(() => {
-        store.dispatch('LogOut').then(() => {
+        store.dispatch('LogOut').then((err) => {
+          Vue.$message.error(err)
           next({path: '/login'})
         })
       })
