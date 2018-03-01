@@ -7,15 +7,21 @@
         <!--</router-link>-->
         <el-menu :default-active="activeIndex" class="el-menu-demo header-menu"
                  mode="horizontal" @select="handleSelect" :router="true">
-          <el-menu-item index="main">首页</el-menu-item>
-          <el-submenu index="account">
+          <el-menu-item index="/main">首页</el-menu-item>
+          <el-submenu index="/account">
             <template slot="title">我的账户</template>
-            <el-menu-item index="info">账号资料</el-menu-item>
-            <el-menu-item index="logout">退出登录</el-menu-item>
+            <el-menu-item index="/userInfo" :route="routers.userInfo">
+              <i class="el-icon-info"></i>
+              <span slot="title">账号资料</span>
+            </el-menu-item>
+            <el-menu-item index="/logout">
+              <i class="el-icon-back"></i>
+              <span slot="title">退出登录</span>
+            </el-menu-item>
           </el-submenu>
         </el-menu>
       </el-header>
-      <el-main :style="{height: showHeader ? '92vh' : '100vh'}">
+      <el-main :style="elMainStyle">
         <router-view></router-view>
       </el-main>
     </el-container>
@@ -23,18 +29,37 @@
 </template>
 
 <script>
+  import UserInfo from '@/components/UserInfo'
+
   export default {
     name: 'App',
     data () {
       return {
         showHeader: this.$route.path !== '/' && this.$route.path !== '/login',
-        activeIndex: 'main'
+        activeIndex: 'main',
+        routers: {
+          userInfo: {
+            path: '/info',
+            name: 'info',
+            title: '账号资料',
+            component: UserInfo
+          }
+        }
+      }
+    },
+    computed: {
+      elMainStyle () {
+        let showHeader = this.$route.path !== '/' && this.$route.path !== '/login'
+        return {
+          height: showHeader ? '92vh' : '100vh',
+          padding: showHeader ? '20px 20px 20px 50px' : '0'
+        }
       }
     },
     methods: {
       handleSelect (key, keyPath) {
         console.log(key, keyPath); // for debug
-        if (key === 'logout') {
+        if (key === '/logout') {
           this.logout()
         }
       },
@@ -52,7 +77,6 @@
     font-family: helvetica,arial,微软雅黑,华文黑体;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
-    text-align: center;
     color: #2c3e50;
   }
 
@@ -68,9 +92,6 @@
   .el-main {
     background-color: white;
     color: #333;
-    text-align: center;
-    line-height: 160px;
-    padding: 0;
   }
 
   .header-menu {

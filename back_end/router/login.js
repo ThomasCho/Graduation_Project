@@ -11,11 +11,11 @@ router.post('/loginbyemail', (req, res) => {
   User.find({
     email: req.body.email
   }, (err, user) => {
-    user = JSON.parse(JSON.stringify(user[0])) // 深拷贝
+    user = user.length ? JSON.parse(JSON.stringify(user[0])) : {} // 深拷贝
     if (err) {
       res.json('error: ' + err)
     }
-    if (!user) {
+    if (!user.email) {
       res.json({
         success: false,
         message: '认证失败，用户名找不到'

@@ -22,12 +22,11 @@ app.use((req, res, next) => {
 
   // 解析 token
   if (token) {
-    console.log('has token') // for debug
     // 确认token
     jwt.verify(token, 'hellothomas', (err, decoded) => {
       if (err) {
         console.log('has token but with error') // for debug
-        return res.json({success: false, message: 'token信息错误.'})
+        res.json({success: false, message: 'token信息错误，请重新登录'})
       } else {
         console.log('has token and no error') // for debug
         // 如果没问题就把解码后的信息保存到请求中，供后面的路由使用

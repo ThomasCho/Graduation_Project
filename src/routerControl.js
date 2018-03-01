@@ -1,8 +1,7 @@
 import router from './router'
 import store from './store'
-import Vue from 'vue'
 
-const whiteList = ['/login', '/authredirect'] // 不重定向白名单
+const whiteList = ['/login'] // 不重定向白名单
 router.beforeEach((to, from, next) => {
   if (store.getters.token) { // 判断是否有token
     if (to.path === '/login' || to.path === '/') {
@@ -12,8 +11,7 @@ router.beforeEach((to, from, next) => {
       store.dispatch('GetInfo').then(() => {
         next()
       }).catch(() => {
-        store.dispatch('LogOut').then((err) => {
-          Vue.$message.error(err)
+        store.dispatch('LogOut').then(() => {
           next({path: '/login'})
         })
       })

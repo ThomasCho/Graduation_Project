@@ -4,7 +4,7 @@ import Login from '@/components/Login'
 import Users from '@/components/Users'
 import Main from '@/components/Main'
 import Error from '@/components/Error'
-import Account from '@/components/account'
+import UserInfo from '@/components/UserInfo'
 
 Vue.use(Router)
 
@@ -36,10 +36,10 @@ export default new Router({
       component: Main
     },
     {
-      path: '/account',
-      name: 'account',
+      path: '/info',
+      name: 'info',
       title: '账号资料',
-      component: Account
+      component: UserInfo
     },
     {
       path: '/user',

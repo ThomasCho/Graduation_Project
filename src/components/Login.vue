@@ -1,7 +1,7 @@
 <template>
   <div class="login-page-background">
     <div class="login-page-form">
-      <span>帐号密码登录</span>
+      <span class="login-page-form_title">帐号密码登录</span>
 
       <el-form ref="form" :model="form" :rules="rules">
         <el-form-item prop="email">
@@ -42,13 +42,9 @@
       onLogin () {
         this.$refs.form.validate((valid) => {
           if (valid) {
-            this.$store.dispatch('LoginByEmail', this.form).then((res) => {
-              if (res.success) {
-                this.$message.success('登录成功')
-                this.$router.push({ path: '/main' })
-              } else {
-                this.$message.error(res.message)
-              }
+            this.$store.dispatch('LoginByEmail', this.form).then(() => {
+              this.$message.success('登录成功')
+              this.$router.push({ path: '/main' })
             }).catch(err => {
               this.$message.error(err)
             })
@@ -72,8 +68,8 @@
   }
   .login-page-form {
     width: 25%;
-    height: 50%;
-    margin: 100px 80px 0 0;
+    height: 30%;
+    margin: 200px 80px 0 0;
     display: inline-block;
     padding: 20px 40px;
     background-color: white;
@@ -84,5 +80,9 @@
   }
   .login-page-form_btn {
     width: 100%;
+  }
+  .login-page-form_title {
+    display: inline-block;
+    margin: 20px 0;
   }
 </style>

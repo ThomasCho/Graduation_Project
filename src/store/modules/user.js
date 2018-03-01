@@ -45,10 +45,14 @@ const user = {
     LoginByEmail ({ commit }, userInfo) {
       return new Promise((resolve, reject) => {
         loginByEmail(userInfo.email.trim(), userInfo.password).then(response => {
-          Cookies.set('x-access-token', response.data.token)
-          commit('SET_TOKEN', response.data.token)
-          commit('SET_EMAIL', userInfo.email.trim())
-          resolve(response.data)
+          if (response.data.success) {
+            Cookies.set('x-access-token', response.data.token)
+            commit('SET_TOKEN', response.data.token)
+            commit('SET_EMAIL', userInfo.email.trim())
+            resolve(response.data)
+          } else {
+            reject(response.data.message)
+          }
         }).catch(error => {
           reject(error)
         })
@@ -60,6 +64,7 @@ const user = {
       return new Promise((resolve, reject) => {
         getInfo(state.token).then(response => {
           if (response.data.success) {
+            commit('SET_EMAIL', response.data.message.email)
             commit('SET_NAME', response.data.message.name)
             commit('SET_AVATAR', response.data.message.avatar)
             commit('SET_INTRODUCTION', response.data.message.introduction)

@@ -2,6 +2,8 @@
 const express = require('express')
 const router = express.Router()
 const User = require('../models/user')
+const bodyParser = require('body-parser')
+router.use(bodyParser.json())
 
 // 获取当前登录用户的信息
 router.get(/user\/info/, (req, res) => {
@@ -36,7 +38,7 @@ router.get('/user/:email', (req, res) => {
     .then(user => {
       res.json({
         success: true,
-        message: user
+        message: user[0]
       })
     })
     .catch(err => {
