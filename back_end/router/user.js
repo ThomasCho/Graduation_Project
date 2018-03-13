@@ -92,6 +92,62 @@ router.put('/user/:email', (req, res) => {
     }))
 })
 
+// 更新一个用户的密码
+router.put('/user/modPsw/:email', (req, res) => {
+  User.find({email: req.params.email})
+    .then(user => {
+      user = user.length ? JSON.parse(JSON.stringify(user[0])) : {} // 深拷贝
+      if (user.password === req.body.oldPsw) {
+        console.log(req.body)
+        // User.update({email: req.params.email}, {
+        //   $set: {
+        //     password: req.body.confirmPsw
+        //   }
+        // }, (err, data) => {
+        //   if (err) {
+        //     res.json({
+        //       success: false,
+        //       message: err
+        //     })
+        //   } else {
+        //     res.json({
+        //       success: true,
+        //       message: data
+        //     })
+        //   }
+        // })
+
+        User.findOneAndUpdate({email: req.params.email}
+          , {
+            $set: {
+              password: req.body.confirmPsw
+            }
+          }, {
+            new: true
+          })
+          .then(user => res.json({
+            success: true,
+            message: user
+          }))
+          .catch(err => res.json({
+            success: false,
+            message: err
+          }))
+      } else {
+        res.json({
+          success: false,
+          message: '修改失败，登录密码错误，请重试'
+        })
+      }
+    })
+    .catch(err => {
+      res.json({
+        success: false,
+        message: err
+      })
+    })
+})
+
 // 删除一个用户
 router.delete('/user/:email', (req, res) => {
   User.findOneAndRemove({

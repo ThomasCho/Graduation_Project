@@ -95,6 +95,6 @@
   }
 
   .header-menu {
-    padding-left: 88%;
+    padding-left: 86%;
   }
 </style>

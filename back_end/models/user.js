@@ -28,6 +28,10 @@ const userSchema = mongoose.Schema({
   constellation: {
     type: String,
     require: false
+  },
+  password: {
+    type: String,
+    require: true
   }
 })
 
