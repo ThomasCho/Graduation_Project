@@ -62,13 +62,13 @@
   .login-page-background {
     height: 100%;
     width: 100%;
-    background: url('../assets/background.png') center;
+    background: url('../assets/img/background.png') center;
     background-size: cover;
     text-align: right;
   }
   .login-page-form {
     width: 25%;
-    height: 30%;
+    height: 37%;
     margin: 200px 80px 0 0;
     display: inline-block;
     padding: 20px 40px;

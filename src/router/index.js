@@ -1,10 +1,10 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 import Login from '@/components/Login'
-import Users from '@/components/Users'
 import Main from '@/components/Main'
 import Error from '@/components/Error'
 import UserInfo from '@/components/UserInfo'
+import PublishEvent from '@/components/PublishEvent'
 
 Vue.use(Router)
 
@@ -42,14 +42,10 @@ export default new Router({
       component: UserInfo
     },
     {
-      path: '/user',
-      name: 'Users',
-      component: Users
-    },
-    {
-      path: '/user/:email',
-      name: 'Users',
-      component: Users
+      path: '/publish',
+      name: 'publish',
+      title: '活动发布',
+      component: PublishEvent
     },
     {
       path: '*',

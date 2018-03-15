@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div style="padding: 20px;">
     <el-breadcrumb separator-class="el-icon-arrow-right">
       <el-breadcrumb-item :to="{ path: '/' }">我的账户</el-breadcrumb-item>
       <el-breadcrumb-item>账号资料</el-breadcrumb-item>
