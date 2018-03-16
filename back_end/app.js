@@ -12,6 +12,8 @@ const upload = require('./router/upload')
 
 mongoose.connect('mongodb://localhost:27017/graduationProject')
 
+let apiWhiteList = ['/api/loginbyemail', '/api/user/register/']
+
 // 只要参数有token或者头信息里有x-access-token，我们就认定它是一个api接口，
 // 校验通过了，就把token的decode对象，也就是之前加密的用户对象返回来，保存为req.api_user
 // 没有挂载路径的中间件，应用的每个请求都会执行该中间件
@@ -36,8 +38,8 @@ app.use((req, res, next) => {
     })
   } else {
     console.log('does not have token') // for debug
-    // 若是登录行为，则没有token是正常的，允许next()
-    if (req.url === '/api/loginbyemail') {
+    // 若在白名单内，则没有token也允许next()
+    if (apiWhiteList.indexOf(req.url) !== -1) {
       next()
     } else {
       // 如果没有token，则返回错误

@@ -50,9 +50,12 @@ router.get('/user/:email', (req, res) => {
 })
 
 // 添加一个用户
-router.post('/user', (req, res) => {
+router.post('/user/register', (req, res) => {
   // 使用User model上的create方法储存数据
-  User.create(req.body, (err, user) => {
+  let newUser = JSON.parse(JSON.stringify(req.body))
+  newUser.name = newUser.gender = newUser.birthday = newUser.introduction = newUser.avatar = newUser.constellation = ''
+  console.log(newUser)
+  User.create(newUser, (err, user) => {
     if (err) {
       res.json({
         success: false,
@@ -98,25 +101,6 @@ router.put('/user/modPsw/:email', (req, res) => {
     .then(user => {
       user = user.length ? JSON.parse(JSON.stringify(user[0])) : {} // 深拷贝
       if (user.password === req.body.oldPsw) {
-        console.log(req.body)
-        // User.update({email: req.params.email}, {
-        //   $set: {
-        //     password: req.body.confirmPsw
-        //   }
-        // }, (err, data) => {
-        //   if (err) {
-        //     res.json({
-        //       success: false,
-        //       message: err
-        //     })
-        //   } else {
-        //     res.json({
-        //       success: true,
-        //       message: data
-        //     })
-        //   }
-        // })
-
         User.findOneAndUpdate({email: req.params.email}
           , {
             $set: {

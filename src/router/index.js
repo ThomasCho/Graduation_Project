@@ -5,6 +5,8 @@ import Main from '@/components/Main'
 import Error from '@/components/Error'
 import UserInfo from '@/components/UserInfo'
 import PublishEvent from '@/components/PublishEvent'
+import ForgetPsw from '@/components/ForgetPsw'
+import Register from '@/components/Register'
 
 Vue.use(Router)
 
@@ -46,6 +48,18 @@ export default new Router({
       name: 'publish',
       title: '活动发布',
       component: PublishEvent
+    },
+    {
+      path: '/forgetPsw',
+      name: 'forgetPsw',
+      title: '忘记密码',
+      component: ForgetPsw
+    },
+    {
+      path: '/register',
+      name: 'register',
+      title: '注册新账号',
+      component: Register
     },
     {
       path: '*',

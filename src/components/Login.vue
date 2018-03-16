@@ -15,6 +15,12 @@
           <el-button type="primary" @click="onLogin" class="login-page-form_btn">登录</el-button>
         </el-form-item>
       </el-form>
+
+      <div class="login-page-form_bottom">
+        <router-link to="forgetPsw">忘记密码?</router-link>
+        &nbsp;&nbsp;|&nbsp;&nbsp;
+        <router-link to="register">注册新账号</router-link>
+      </div>
     </div>
   </div>
 </template>
@@ -68,7 +74,7 @@
   }
   .login-page-form {
     width: 25%;
-    height: 37%;
+    height: 43%;
     margin: 200px 80px 0 0;
     display: inline-block;
     padding: 20px 40px;
@@ -84,5 +90,13 @@
   .login-page-form_title {
     display: inline-block;
     margin: 20px 0;
+  }
+  a {
+    color: #666;
+    text-decoration: none;
+    font-size: 14px;
+  }
+  a:hover {
+    text-decoration: underline;
   }
 </style>

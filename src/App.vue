@@ -31,11 +31,12 @@
 <script>
   import UserInfo from '@/components/UserInfo'
 
+  let whiteList = ['/', '/login', '/register']
+
   export default {
     name: 'App',
     data () {
       return {
-        showHeader: this.$route.path !== '/' && this.$route.path !== '/login',
         activeIndex: 'main',
         routers: {
           userInfo: {
@@ -49,11 +50,13 @@
     },
     computed: {
       elMainStyle () {
-        let showHeader = this.$route.path !== '/' && this.$route.path !== '/login'
         return {
-          height: showHeader ? '92vh' : '100vh',
-          padding: showHeader ? '20px 20px 20px 50px' : '0'
+          height: whiteList.indexOf(this.$route.path) === -1 ? '92vh' : '100vh',
+          padding: '0'
         }
+      },
+      showHeader () {
+        return whiteList.indexOf(this.$route.path) === -1
       }
     },
     methods: {
@@ -95,6 +98,6 @@
   }
 
   .header-menu {
-    padding-left: 86%;
+    padding-left: 84%;
   }
 </style>
