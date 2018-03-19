@@ -9,10 +9,12 @@ const bodyParser = require('body-parser')
 const user = require('./router/user')
 const login = require('./router/login')
 const upload = require('./router/upload')
+const verification = require('./router/verification')
 
 mongoose.connect('mongodb://localhost:27017/graduationProject')
 
-let apiWhiteList = ['/api/loginbyemail', '/api/user/register/']
+let apiWhiteList = ['/api/loginbyemail', '/api/user/register', '/api/user/forgetPsw',
+  '/api/verification', '/api/verifyUserAndPhone', '/api/verifyCode']
 
 // 只要参数有token或者头信息里有x-access-token，我们就认定它是一个api接口，
 // 校验通过了，就把token的decode对象，也就是之前加密的用户对象返回来，保存为req.api_user
@@ -55,6 +57,7 @@ app.use((req, res, next) => {
 app.use('/api', user)
 app.use('/api', login)
 app.use('/api', upload)
+app.use('/api', verification)
 
 // 使用 morgan 将请求日志打印到控制台
 app.use(morgan('dev'))

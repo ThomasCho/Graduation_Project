@@ -9,6 +9,7 @@ const user = {
     email: '',
     introduction: '',
     constellation: '',
+    phone: '',
     gender: '',
     birthday: ''
   },
@@ -31,6 +32,9 @@ const user = {
     },
     SET_CONSTELLATION: (state, constellation) => {
       state.constellation = constellation
+    },
+    SET_PHONE: (state, phone) => {
+      state.phone = phone
     },
     SET_GENDER: (state, gender) => {
       state.gender = gender
@@ -69,6 +73,7 @@ const user = {
             commit('SET_AVATAR', response.data.message.avatar)
             commit('SET_INTRODUCTION', response.data.message.introduction)
             commit('SET_CONSTELLATION', response.data.message.constellation)
+            commit('SET_PHONE', response.data.message.phone)
             commit('SET_GENDER', response.data.message.gender)
             commit('SET_BIRTHDAY', response.data.message.birthday)
             resolve(response.data.message)

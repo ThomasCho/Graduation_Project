@@ -50,6 +50,9 @@
           <el-form-item prop="constellation" label="星座">
             <el-input v-model="infoForm.constellation"></el-input>
           </el-form-item>
+          <el-form-item prop="phone" label="手机">
+            <el-input v-model="infoForm.phone"></el-input>
+          </el-form-item>
           <el-form-item prop="introduction" label="自我介绍" spellcheck="false">
             <el-input v-model="infoForm.introduction"></el-input>
           </el-form-item>
@@ -130,6 +133,9 @@
           ],
           gender: [
             { required: true, message: '请选择性别'}
+          ],
+          phone: [
+            { required: true, message: '请输入电话'}
           ]
         },
         pswRules: {
@@ -166,6 +172,7 @@
               gender: res.data.message.gender,
               birthday: res.data.message.birthday,
               constellation: res.data.message.constellation,
+              phone: res.data.message.phone,
               introduction: res.data.message.introduction
             }
           } else {

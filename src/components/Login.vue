@@ -29,6 +29,13 @@
   export default {
     name: 'Login',
     data () {
+      let validateEmail = (rule, value, callback) => {
+        if (value === '' || !/^[\d]{2}[a-z]{3,}[\d]?$/.test(value)) {
+          callback(new Error('请输入汕大邮箱'))
+        } else {
+          callback()
+        }
+      }
       return {
         form: {
           email: '',
@@ -36,7 +43,7 @@
         },
         rules: {
           email: [
-            { required: true, message: '请输入账号'},
+            { validator: validateEmail, trigger: 'blur'}
           ],
           password: [
             { required: true, message: '请输入密码'}

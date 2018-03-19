@@ -36,10 +36,17 @@ router.get('/user/:email', (req, res) => {
     email: req.params.email
   })
     .then(user => {
-      res.json({
-        success: true,
-        message: user[0]
-      })
+      if (!user.length) {
+        res.json({
+          success: false,
+          message: '无此用户'
+        })
+      } else {
+        res.json({
+          success: true,
+          message: user[0]
+        })
+      }
     })
     .catch(err => {
       res.json({
@@ -53,7 +60,7 @@ router.get('/user/:email', (req, res) => {
 router.post('/user/register', (req, res) => {
   // 使用User model上的create方法储存数据
   let newUser = JSON.parse(JSON.stringify(req.body))
-  newUser.name = newUser.gender = newUser.birthday = newUser.introduction = newUser.avatar = newUser.constellation = ''
+  newUser.name = newUser.gender = newUser.birthday = newUser.introduction = newUser.avatar = newUser.constellation = newUser.phone = ''
   console.log(newUser)
   User.create(newUser, (err, user) => {
     if (err) {
@@ -70,6 +77,27 @@ router.post('/user/register', (req, res) => {
   })
 })
 
+// 忘记密码的更新用户密码
+router.put('/user/forgetPsw', (req, res) => {
+  console.log(req.body)
+  User.findOneAndUpdate({email: req.body.email}
+    , {
+      $set: {
+        password: req.body.newPsw
+      }
+    }, {
+      new: true
+    })
+    .then(user => res.json({
+      success: true,
+      message: user
+    }))
+    .catch(err => res.json({
+      success: false,
+      message: err
+    }))
+})
+
 // 更新一个用户
 router.put('/user/:email', (req, res) => {
   User.findOneAndUpdate({email: req.params.email}
@@ -79,6 +107,7 @@ router.put('/user/:email', (req, res) => {
         name: req.body.name,
         introduction: req.body.introduction,
         constellation: req.body.constellation,
+        phone: req.body.phone,
         gender: req.body.gender,
         birthday: req.body.birthday
       }

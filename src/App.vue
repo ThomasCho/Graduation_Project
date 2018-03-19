@@ -31,7 +31,7 @@
 <script>
   import UserInfo from '@/components/UserInfo'
 
-  let whiteList = ['/', '/login', '/register']
+  let whiteList = ['/', '/login', '/register', '/forgetPsw']
 
   export default {
     name: 'App',

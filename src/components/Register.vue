@@ -75,7 +75,7 @@
           confirmPsw: [
             { validator: validateConfirmPass, trigger: 'blur' }
           ]
-        },
+        }
       }
     },
     methods: {
@@ -85,7 +85,7 @@
         this.$refs.form.validate((valid) => {
           if (valid) {
             this.fetch({
-              url: 'api/user/register/',
+              url: 'api/user/register',
               method: 'post',
               data: submitData
             }).then((res) => {
