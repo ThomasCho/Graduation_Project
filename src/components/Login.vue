@@ -1,5 +1,6 @@
 <template>
-  <div class="login-page-background">
+  <div class="login-page-background" :style="changeBackground">
+    <img src="../assets/img/login_logo.png" class="login-page-logo">
     <div class="login-page-form">
       <span class="login-page-form_title">帐号密码登录</span>
 
@@ -36,6 +37,7 @@
           callback()
         }
       }
+
       return {
         form: {
           email: '',
@@ -48,6 +50,17 @@
           password: [
             { required: true, message: '请输入密码'}
           ]
+        }
+      }
+    },
+    computed: {
+      changeBackground () {
+        let currentImg = Math.floor(Math.random() * 3)
+        let imgArr = ['login_one.png', 'login_two.png', 'login_three.png']
+        return {
+          backgroundImage: 'url(' + require('../assets/img/' + imgArr[currentImg]) + ')',
+          backgroundSize: 'cover',
+          backgroundPosition: 'center'
         }
       }
     },
@@ -75,9 +88,10 @@
   .login-page-background {
     height: 100%;
     width: 100%;
-    background: url('../assets/img/background.png') center;
-    background-size: cover;
     text-align: right;
+  }
+  .login-page-logo {
+    margin: 0 15% 20vh 0;
   }
   .login-page-form {
     width: 25%;
