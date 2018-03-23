@@ -9,12 +9,31 @@ router.use(bodyParser.json())
 // 头像上传
 router.post('/img/avatar', (req, res) => {
   var form = new formidable.IncomingForm()
-  form.uploadDir = './public/img'
+  form.uploadDir = './public/img/avatar'
   form.parse(req, (err, fields, files) => {
     if (err) {
       res.json({success: false, message: '上传失败'})
     }
     let avatarName = '/' + req.api_user.email + '.' + files.file.name.split('.')[1]
+    let newPath = form.uploadDir + avatarName
+    fs.renameSync(files.file.path, newPath)
+    res.send({
+      success: true,
+      code: 200,
+      msg: avatarName
+    })
+  })
+})
+
+// 海报上传
+router.post('/img/poster', (req, res) => {
+  var form = new formidable.IncomingForm()
+  form.uploadDir = './public/img/poster'
+  form.parse(req, (err, fields, files) => {
+    if (err) {
+      res.json({success: false, message: '上传失败'})
+    }
+    let avatarName = '/' + Math.floor(new Date().getTime() + Math.random() * 10) + '.' + files.file.name.split('.')[1]
     let newPath = form.uploadDir + avatarName
     fs.renameSync(files.file.path, newPath)
     res.send({

@@ -5,7 +5,7 @@
       <el-breadcrumb-item>账号资料</el-breadcrumb-item>
     </el-breadcrumb>
 
-    <el-tabs v-model="activeName" @tab-click="handleClick" class="userinfo_tabpane">
+    <el-tabs v-model="activeName" class="userinfo_tabpane">
       <el-tab-pane label="基本资料" name="basicInfo">
         <el-form ref="infoForm" :model="infoForm" :rules="infoRules" label-position="left" label-width="100px">
           <el-form-item prop="avatar" label="头像">
@@ -167,7 +167,7 @@
         }).then((res) => {
           if (res.data.success) {
             this.infoForm = {
-              avatar: res.data.message.avatar ? 'http://localhost:3000/img/' + res.data.message.avatar + '?token=' + this.$store.getters.token : '',
+              avatar: res.data.message.avatar ? 'http://localhost:3000/img/avatar/' + res.data.message.avatar + '?token=' + this.$store.getters.token : '',
               name: res.data.message.name,
               gender: res.data.message.gender,
               birthday: res.data.message.birthday,
@@ -182,20 +182,17 @@
           this.$message.error(err)
         })
       },
-      handleClick (tab, event) {
-        console.log(tab, event)
-      },
       uploadBasicInfo (res) {
         // 如果没有修改头像，就不用改头像地址了
         if (res) {
           // 上传成功后，因url没变，img标签不会自动刷新，所以加多了一个随机参数 reload
-          this.infoForm.avatar = 'http://localhost:3000/img' + res.msg +
+          this.infoForm.avatar = 'http://localhost:3000/img/avatar' + res.msg +
             '?token=' + this.$store.getters.token + '&reload=' + Math.random()
         }
 
         let submitData = JSON.parse(JSON.stringify(this.infoForm))
         // 提交的 avatar 要预处理，只保留名字
-        submitData.avatar = submitData.avatar.slice(submitData.avatar.indexOf('img/') + 4,
+        submitData.avatar = submitData.avatar.slice(submitData.avatar.indexOf('avatar') + 6,
           submitData.avatar.indexOf('?'))
         this.fetch({
           url: 'api/user/' + this.$store.getters.email,

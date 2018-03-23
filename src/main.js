@@ -8,8 +8,16 @@ import ElementUI from 'element-ui'
 import 'element-ui/lib/theme-chalk/index.css'
 import './routerControl.js'
 import fetch from './util/fetch'
+import VueAMap from 'vue-amap'
 
 Vue.use(ElementUI)
+Vue.use(VueAMap)
+VueAMap.initAMapApiLoader({
+  key: 'fe57c17d09cdcee28e0b3ba77620629c',
+  plugin: ['Geolocation', 'Scale'],
+  // 默认高德 sdk 版本为 1.4.4
+  v: '1.4.4'
+})
 
 Vue.config.productionTip = false
 Vue.prototype.fetch = fetch
