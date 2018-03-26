@@ -1,4 +1,4 @@
-// 对发布操作的路由
+// 对活动相关操作的路由
 const express = require('express')
 const Event = require('../models/event')
 const bodyParser = require('body-parser')
@@ -22,6 +22,23 @@ router.post('/publishEvent', (req, res) => {
       })
     }
   })
+})
+
+// 获取活动
+router.get('/loadEvent', (req, res) => {
+  Event.find({})
+    .then(events => {
+      res.json({
+        success: true,
+        message: events
+      })
+    })
+    .catch(err => {
+      res.json({
+        success: false,
+        message: err
+      })
+    })
 })
 
 module.exports = router

@@ -8,6 +8,7 @@
         <el-menu :default-active="activeIndex" class="el-menu-demo header-menu"
                  mode="horizontal" @select="handleSelect" :router="true">
           <el-menu-item index="/main">首页</el-menu-item>
+          <el-menu-item index="/eventWall">活动墙</el-menu-item>
           <el-submenu index="/account">
             <template slot="title">我的账户</template>
             <el-menu-item index="/userInfo" :route="routers.userInfo">
@@ -77,7 +78,7 @@
 
 <style>
   #app {
-    font-family: helvetica,arial,微软雅黑,华文黑体;
+    fontFamily: "Microsoft YaHei UI Light";
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     color: #2c3e50;
@@ -98,6 +99,6 @@
   }
 
   .header-menu {
-    padding-left: 84%;
+    padding-left: 78%;
   }
 </style>

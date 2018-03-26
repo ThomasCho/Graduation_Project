@@ -271,6 +271,9 @@
             }).then((res) => {
               if (res.data.success) {
                 this.$message.success('修改成功')
+                this.$store.dispatch('LogOut').then(() => {
+                  this.$router.push({ path: '/' })
+                })
               } else {
                 this.$message.error(res.data.message)
               }

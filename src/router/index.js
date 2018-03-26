@@ -7,6 +7,8 @@ import UserInfo from '@/components/UserInfo'
 import PublishEvent from '@/components/PublishEvent'
 import ForgetPsw from '@/components/ForgetPsw'
 import Register from '@/components/Register'
+import EventWall from '@/components/EventWall'
+import Event from '@/components/Event'
 
 Vue.use(Router)
 
@@ -48,6 +50,18 @@ export default new Router({
       name: 'publish',
       title: '活动发布',
       component: PublishEvent
+    },
+    {
+      path: '/eventWall',
+      name: 'eventWall',
+      title: '活动墙',
+      component: EventWall
+    },
+    {
+      path: '/event',
+      name: 'event',
+      title: '活动',
+      component: Event
     },
     {
       path: '/forgetPsw',

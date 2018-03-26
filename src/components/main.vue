@@ -20,28 +20,24 @@
         pages:[
           {
             style: {
-              backgroundImage: "url(" + require("../assets/img/page1-bg.png") + ")",
-              fontFamily: "Microsoft YaHei UI Light"
+              backgroundImage: 'url(' + require('../assets/img/page1-bg.png') + ')'
             },
             component: main_one
           },
           {
             style: {
-              color: '#333333',
-              fontFamily: "Microsoft YaHei UI Light"
+              color: '#333333'
             },
             component: main_two
           },
           {
             style: {
-              color: '#333333',
-              fontFamily: "Microsoft YaHei UI Light"
+              color: '#333333'
             },
             component: main_three
           },
           {
             style: {
-              fontFamily: "Microsoft YaHei UI Light",
               backgroundColor: '#4D4D4D'
             },
             component: main_four

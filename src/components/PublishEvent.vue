@@ -10,9 +10,7 @@
           :headers="uploadHeaders"
           :show-file-list="true"
           limit="1"
-          :on-preview="handlePictureCardPreview"
           :on-remove="handleRemove"
-          :file-list="fileList"
           :on-error="handleUploadError"
           :on-success="handleAvatarSuccess"
           :before-upload="beforeAvatarUpload"
@@ -36,29 +34,16 @@
           </el-amap>
         </div>
       </el-form-item>
-      <el-form-item label="活动开始时间" required>
+      <el-form-item label="活动时间" required>
         <el-col :span="11">
-          <el-form-item prop="startDate">
-            <el-date-picker type="date" placeholder="选择日期" :editable="false" v-model="form.startDate" style="width: 100%;"></el-date-picker>
+          <el-form-item prop="date">
+            <el-date-picker type="date" placeholder="选择日期" :editable="false" v-model="form.date" style="width: 100%;"></el-date-picker>
           </el-form-item>
         </el-col>
         <el-col class="line time-picker_bar" :span="2">-</el-col>
         <el-col :span="11">
-          <el-form-item prop="startTime">
-            <el-time-picker type="fixed-time" placeholder="选择时间" :editable="false" v-model="form.startTime" style="width: 100%;"></el-time-picker>
-          </el-form-item>
-        </el-col>
-      </el-form-item>
-      <el-form-item label="活动结束时间" required>
-        <el-col :span="11">
-          <el-form-item prop="endDate">
-            <el-date-picker type="date" placeholder="选择日期" :editable="false" v-model="form.endDate" style="width: 100%;"></el-date-picker>
-          </el-form-item>
-        </el-col>
-        <el-col class="line time-picker_bar" :span="2">-</el-col>
-        <el-col :span="11">
-          <el-form-item prop="endTime">
-            <el-time-picker type="fixed-time" placeholder="选择时间" :editable="false" v-model="form.endTime" style="width: 100%;"></el-time-picker>
+          <el-form-item prop="time">
+            <el-time-picker type="fixed-time" placeholder="选择时间" :is-range="true" :editable="false" v-model="form.time" style="width: 100%;"></el-time-picker>
           </el-form-item>
         </el-col>
       </el-form-item>
@@ -115,10 +100,8 @@
       return {
         form: {
           name: '',
-          startDate: '',
-          startTime: '',
-          endDate: '',
-          endTime: '',
+          date: '',
+          time: '',
           isFree: false,
           money: '',
           type: [],
@@ -130,18 +113,6 @@
           name: [
             { required: true, message: '请输入活动名称', trigger: 'blur' },
             { min: 3, max: 10, message: '长度在 3 到 10 个字符', trigger: 'blur' }
-          ],
-          startDate: [
-            { type: 'date', required: true, message: '请选择日期', trigger: 'change' }
-          ],
-          startTime: [
-            { type: 'date', required: true, message: '请选择时间', trigger: 'change' }
-          ],
-          endDate: [
-            { type: 'date', required: true, message: '请选择日期', trigger: 'change' }
-          ],
-          endTime: [
-            { type: 'date', required: true, message: '请选择时间', trigger: 'change' }
           ],
           type: [
             { type: 'array', required: true, message: '请至少选择一个活动性质', trigger: 'change' }
@@ -156,7 +127,6 @@
         uploadHeaders: {
           'x-access-token': this.$store.getters.token
         },
-        fileList: [],
         amapManager,
         zoom: 12,
         center: [113.8, 23.1],
@@ -197,8 +167,7 @@
             }
           }
         }],
-        editorContent: '',
-        canSubmitBasicInfo: true
+        editorContent: ''
       }
     },
     mounted () {
@@ -209,10 +178,6 @@
       editor.create()
     },
     methods: {
-      handlePictureCardPreview (file) {
-        console.log(file)
-        this.fileList.push(file)
-      },
       handleRemove (file, fileList) {
         console.log(file, fileList);
       },
@@ -237,8 +202,6 @@
           this.$message.error('上传头像图片大小不能超过 2MB!')
         }
 
-        this.canSubmitBasicInfo = type && isLt2M
-
         return type && isLt2M
       },
       uploadBasicInfo (res) {
@@ -249,12 +212,7 @@
         if (!submitData.isFree) {
           submitData.money = ''
         }
-        // 如果有上传海报
-        if (res) {
-          submitData.poster = res.msg
-        } else {
-          submitData.poster = ''
-        }
+        submitData.poster = res.msg
 
         this.fetch({
           url: 'api/publishEvent',
@@ -263,8 +221,7 @@
         }).then((res) => {
           if (res.data.success) {
             this.$message.success('发布成功')
-            // 暂时跳转到首页，以后做好了活动页面，就跳到这里
-            this.$router.replace({ path: '/main' })
+            this.$router.replace({ path: '/eventWall' })
           } else {
             this.$message.error(res.data.message)
           }
@@ -272,12 +229,14 @@
           this.$message.error(err)
         })
       },
-      validatePlaceAndFeeAndTime () {
+      validateOthers () {
         let errMsg = []
 
+        // 验证有没有选择地点
         if (!this.center) {
           errMsg.push('请选择活动地点')
         }
+        // 验证有没有输入活动费用
         if (this.form.isFree) {
           if (!this.form.money) {
             errMsg.push('请输入活动费用')
@@ -285,10 +244,15 @@
             errMsg.push('活动费用必须为数字')
           }
         }
-        if ((new Date(this.form.endTime) - new Date(this.form.startTime)) <= 0) {
+        // 验证活动时间符不符合规范
+        if ((new Date(this.form.time[1]) - new Date(this.form.time[0])) <= 0) {
           errMsg.push('结束时间必须晚于开始时间')
-        } else if ((new Date(this.form.endTime) - new Date(this.form.startTime)) <= (60 * 30 * 1000)) {
+        } else if ((new Date(this.form.time[1]) - new Date(this.form.time[0])) <= (60 * 30 * 1000)) {
           errMsg.push('活动时间不得少于半小时')
+        }
+        // 验证有没有上传海报
+        if (!this.$refs.upload.uploadFiles.length) {
+          errMsg.push('请上传活动海报')
         }
 
         return errMsg
@@ -296,15 +260,11 @@
       submitForm (formName) {
         this.$refs[formName].validate((valid) => {
           if (valid) {
-            // 还需单独验证地点选择和活动费用（有得话）
-            let errMsg = this.validatePlaceAndFeeAndTime()
+            let errMsg = this.validateOthers()
             if (errMsg.length) {
               this.$message.error(errMsg.join(','))
             } else {
               this.$refs.upload.submit()
-              if (this.canSubmitBasicInfo) {
-                this.uploadBasicInfo()
-              }
             }
           } else {
             this.$message.error('请输入必填项')

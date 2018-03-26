@@ -52,5 +52,6 @@
   .main-four_contact {
     margin: 50px 0 -70px 0;
     font-size: 16px;
+    height: 80px;
   }
 </style>

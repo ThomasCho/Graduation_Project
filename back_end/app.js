@@ -10,7 +10,7 @@ const user = require('./router/user')
 const login = require('./router/login')
 const upload = require('./router/upload')
 const verification = require('./router/verification')
-const publish = require('./router/publish')
+const event = require('./router/event')
 
 mongoose.connect('mongodb://localhost:27017/graduationProject')
 
@@ -41,8 +41,8 @@ app.use((req, res, next) => {
     })
   } else {
     console.log('does not have token') // for debug
-    // 若在白名单内，则没有token也允许next()
-    if (apiWhiteList.indexOf(req.url) !== -1) {
+    // 若在白名单内，则没有token也允许next()；或请求后台静态资源也不需要token
+    if (apiWhiteList.indexOf(req.url) !== -1 || /\.[jpg|png]/.test(req.url)) {
       next()
     } else {
       // 如果没有token，则返回错误
@@ -59,7 +59,7 @@ app.use('/api', user)
 app.use('/api', login)
 app.use('/api', upload)
 app.use('/api', verification)
-app.use('/api', publish)
+app.use('/api', event)
 
 // 使用 morgan 将请求日志打印到控制台
 app.use(morgan('dev'))

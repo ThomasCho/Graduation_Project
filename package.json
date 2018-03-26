@@ -35,6 +35,7 @@
     "vue-amap": "^0.5.4",
     "vue-concise-slider": "^2.4.8",
     "vue-router": "^3.0.1",
+    "vue-waterfall": "^1.0.6",
     "vuex": "^3.0.1",
     "wangeditor": "^3.1.0",
     "yunpian-sdk": "^1.0.0"

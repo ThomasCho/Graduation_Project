@@ -5,20 +5,12 @@ const eventSchema = mongoose.Schema({
     type: String,
     require: true
   },
-  startDate: {
+  date: {
     type: Date,
     require: true
   },
-  startTime: {
-    type: Date,
-    require: true
-  },
-  endDate: {
-    type: Date,
-    require: true
-  },
-  endTime: {
-    type: Date,
+  time: {
+    type: Array,
     require: true
   },
   isFree: {

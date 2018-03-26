@@ -19,6 +19,9 @@
             <el-input type="password" v-model="form.confirmPsw"
                       auto-complete="off" placeholder="确认密码"></el-input>
           </el-form-item>
+          <el-form-item prop="phone">
+            <el-input v-model="form.phone" placeholder="手机号码"></el-input>
+          </el-form-item>
           <el-form-item>
             <el-button type="primary" @click="onRegister" class="register-page_btn">立即注册</el-button>
           </el-form-item>
@@ -32,6 +35,13 @@
   export default {
     name: 'Register',
     data () {
+      let validatePhone = (rule, value, callback) => {
+        if (value === '' || !/^((1[3,5,8][0-9])|(14[5,7])|(17[0,6,7,8])|(19[7]))\d{8}$/.test(value)) {
+          callback(new Error('请输入正确的手机号码格式'))
+        } else {
+          callback()
+        }
+      }
       let validateEmail = (rule, value, callback) => {
         if (value === '' || !/^[\d]{2}[a-z]{3,}[\d]?$/.test(value)) {
           callback(new Error('请输入汕大邮箱'))
@@ -63,7 +73,8 @@
         form: {
           email: '',
           password: '',
-          confirmPsw: ''
+          confirmPsw: '',
+          phone: ''
         },
         rules: {
           email: [
@@ -74,13 +85,20 @@
           ],
           confirmPsw: [
             { validator: validateConfirmPass, trigger: 'blur' }
+          ],
+          phone: [
+            { validator: validatePhone, trigger: 'blur' }
           ]
         }
       }
     },
     methods: {
       onRegister () {
-        let submitData = this.form
+        let submitData = {
+          email: this.form.email,
+          password: this.form.password,
+          phone: this.form.phone
+        }
 
         this.$refs.form.validate((valid) => {
           if (valid) {
