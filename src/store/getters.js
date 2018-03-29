@@ -20,7 +20,8 @@ const getters = {
   remark: state => state.event.remark,
   detail: state => state.event.detail,
   region: state => state.event.region,
-  poster: state => state.event.poster
+  poster: state => state.event.poster,
+  participant: state => state.event.participant
 }
 
 export default getters

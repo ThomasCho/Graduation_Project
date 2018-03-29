@@ -48,6 +48,10 @@ const eventSchema = mongoose.Schema({
   poster: {
     type: String,
     require: false
+  },
+  participant: {
+    type: Array,
+    require: true
   }
 }, {versionKey: false})
 

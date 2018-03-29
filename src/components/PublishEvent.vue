@@ -30,7 +30,7 @@
           <el-amap-search-box class="search-box" :on-search-result="onSearchResult"></el-amap-search-box>
           <el-amap ref="map" vid="amap" :amap-manager="amapManager" :plugin="plugin"
                    :center="center" :zoom="zoom" :events="events" class="amap-demo">
-            <el-amap-marker v-for="marker in markers" :position="marker" ></el-amap-marker>
+            <el-amap-marker v-for="marker in markers" :position="marker" :key="marker[0]" ></el-amap-marker>
           </el-amap>
         </div>
       </el-form-item>

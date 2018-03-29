@@ -9,6 +9,7 @@ router.use(bodyParser.json())
 router.post('/publishEvent', (req, res) => {
   console.log(req.body)
   let newEvent = JSON.parse(JSON.stringify(req.body))
+  newEvent.participant = []
   Event.create(newEvent, (err, event) => {
     if (err) {
       res.json({
