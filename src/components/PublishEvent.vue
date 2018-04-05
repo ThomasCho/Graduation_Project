@@ -48,19 +48,19 @@
         </el-col>
       </el-form-item>
       <el-form-item label="收费" prop="isFree">
-        <el-switch v-model="form.isFree"></el-switch>
+        <el-switch v-model="!form.isFree"></el-switch>
       </el-form-item>
-      <el-form-item label="费用" prop="money" v-if="form.isFree">
+      <el-form-item label="费用" prop="money" v-if="!form.isFree">
         <el-input placeholder="请输入内容" v-model="form.money">
           <template slot="prepend">每人(元)：</template>
         </el-input>
       </el-form-item>
-      <el-form-item label="活动性质" prop="type">
+      <el-form-item label="活动类型" prop="type">
         <el-checkbox-group v-model="form.type">
-          <el-checkbox label="美食/餐厅线上活动" name="type"></el-checkbox>
-          <el-checkbox label="地推活动" name="type"></el-checkbox>
-          <el-checkbox label="线下主题活动" name="type"></el-checkbox>
-          <el-checkbox label="单纯品牌曝光" name="type"></el-checkbox>
+          <el-checkbox label="学习" name="type"></el-checkbox>
+          <el-checkbox label="吃喝" name="type"></el-checkbox>
+          <el-checkbox label="玩耍" name="type"></el-checkbox>
+          <el-checkbox label="旅行" name="type"></el-checkbox>
         </el-checkbox-group>
       </el-form-item>
       <el-form-item label="特殊资源" prop="resource">
@@ -102,7 +102,7 @@
           name: '',
           date: '',
           time: '',
-          isFree: false,
+          isFree: true,
           money: '',
           type: [],
           resource: '',
@@ -209,7 +209,7 @@
         submitData.detail = this.editorContent
         submitData.region = this.center
         // 如果不收费，则money那项要清零
-        if (!submitData.isFree) {
+        if (submitData.isFree) {
           submitData.money = ''
         }
         submitData.poster = res.msg
@@ -237,7 +237,7 @@
           errMsg.push('请选择活动地点')
         }
         // 验证有没有输入活动费用
-        if (this.form.isFree) {
+        if (!this.form.isFree) {
           if (!this.form.money) {
             errMsg.push('请输入活动费用')
           } else if (!/^[\d]+$/.test(this.form.money)) {

@@ -1,7 +1,43 @@
 <template>
-  <div style="padding: 20px">
+  <div style="padding: 0 20px 20px 20px">
+    <div class="event-wall_classify-tab">
+      <el-tag class="event-wall_tag"
+              @click.native="chooseType('recommend')"
+              :class="{ 'event-wall_active-type': isActive === 'recommend' }">
+        薦
+      </el-tag>
+      <el-tag class="event-wall_tag"
+              @click.native="chooseType('learning')"
+              :class="{ 'event-wall_active-type': isActive === 'learning' }">
+        學
+      </el-tag>
+      <el-tag class="event-wall_tag"
+              @click.native="chooseType('eating')"
+              :class="{ 'event-wall_active-type': isActive === 'eating' }">
+        吃
+      </el-tag>
+      <el-tag class="event-wall_tag"
+              @click.native="chooseType('playing')"
+              :class="{ 'event-wall_active-type': isActive === 'playing' }">
+        玩
+      </el-tag>
+      <el-tag class="event-wall_tag"
+              @click.native="chooseType('hiking')"
+              :class="{ 'event-wall_active-type': isActive === 'hiking' }">
+        行
+      </el-tag>
+
+      <el-input
+        placeholder="选你所爱" :clearable="true"
+        suffix-icon="el-icon-search"
+        class="event-wall_search"
+        v-model="searchWord" @keyup.enter.native="search">
+      </el-input>
+      <el-button type="primary" icon="el-icon-search" @click="search">搜索</el-button>
+    </div>
     <p class="event-wall_title">在活动墙，寻找你所需</p>
-    <waterfall :line-gap="200" :watch="items" :grow="grow" ref="waterfall" @click.native="shuffle">
+    <waterfall :line-gap="200" :watch="items" :grow="grow"
+               ref="waterfall" @click.native="shuffle" v-loading.fullscreen.lock="fullscreenLoading">
       <waterfall-slot
         v-for="(item, index) in items"
         :width="item.width"
@@ -12,12 +48,19 @@
         @click.native="viewEvent(index)"
       >
         <div class="item" :style="item.style" :index="item.index">
+          <img src="../assets/img/expired.png" class="event-wall_expire-pic" v-show="isExpired(item.time[0])">
           <div class="event-wall_poster" :style="getPosterStyle(item)"></div>
           <div class="event-wall_name" :title="item.name">名称：{{item.name}}</div>
           <div class="event-wall_time" :title="showTime(item)">时间：{{showTime(item)}}</div>
+          <div class="event-wall_type" :title="item.type">
+            活动类型：{{item.type | convertType}}
+          </div>
           <div class="event-wall_desc" :title="item.desc">
             活动形式：
             <p class="event-wall_desc-p">{{item.desc}}</p>
+          </div>
+          <div class="event-wall_count">
+            <i class="el-icon-star-off"></i>&nbsp;{{item.star}}<span style="margin: 0 10%">|</span><i class="el-icon-view"></i>&nbsp;{{item.view}}
           </div>
         </div>
       </waterfall-slot>
@@ -38,17 +81,24 @@
     data () {
       return {
         items: [],
-        grow: [3, 2, 3, 2]
+        grow: [3, 2, 3, 2],
+        isActive: 'recommend',
+        searchWord: '',
+        fullscreenLoading: false
       }
     },
     mounted () {
       this.loadEvent()
     },
     methods: {
-      loadEvent () {
+      loadEvent (type) {
+        let vm = this
+
+        vm.fullscreenLoading = true
         this.fetch({
           url: 'api/loadEvent',
-          method: 'get'
+          method: 'get',
+          params: { type }
         }).then((res) => {
           if (res.data.success) {
             let items = res.data.message.map((val, index) => {
@@ -62,6 +112,7 @@
               return val
             })
             this.items = JSON.parse(JSON.stringify(items))
+            vm.fullscreenLoading = false
           } else {
             this.$message.error(res.data.message)
           }
@@ -81,7 +132,8 @@
         })
       },
       viewEvent (val) {
-        this.$store.dispatch('ChooseEvent', this.items[val])
+        // this.$store.dispatch('ChooseEvent', this.items[val])
+        localStorage.setItem('currentEvent', JSON.stringify(this.items[val]))
         this.$router.push({path: '/event'})
       },
       getPosterStyle (item) {
@@ -109,6 +161,21 @@
       },
       showTime (item) {
         return this.convertDate(item.date) + '  ' + this.convertTime(item.time[0]) + ' 至 ' + this.convertTime(item.time[1])
+      },
+      chooseType (type) {
+        this.isActive = type
+        this.loadEvent(type)
+      },
+      search () {
+        this.loadEvent(this.searchWord)
+      },
+      isExpired (val) {
+        return ((new Date()) - (new Date(val))) > 0
+      }
+    },
+    filters: {
+      convertType (val) {
+        return val.join(' / ')
       }
     }
   }
@@ -170,13 +237,22 @@
     border-bottom: 1px solid #EEEEEE;
     line-height: 182%;
   }
+  .event-wall_type {
+    width: 95%;
+    height: 10%;
+    padding: 0 0 0 10px;
+    overflow: hidden;
+    border-bottom: 1px solid #EEEEEE;
+    line-height: 182%;
+  }
   .event-wall_desc {
     width: 95%;
-    height: 30%;
+    height: 14%;
     padding: 0 0 0 10px;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
+    border-bottom: 1px solid #EEEEEE;
     line-height: 182%;
   }
   .event-wall_desc-p {
@@ -184,10 +260,56 @@
     overflow: hidden;
     text-overflow: ellipsis;
   }
+  .event-wall_count {
+    width: 98%;
+    height: 5%;
+    padding: 0 0 0 10px;
+    overflow: hidden;
+    line-height: 130%;
+    background-color: orange;
+    border-radius: 0 0 7px 7px;
+    text-align: center;
+  }
   .event-wall_title {
     text-align: center;
     font-weight: bold;
     font-size: 24px;
-    margin: 10px 0;
+    margin: 15px 0;
+  }
+  .event-wall_classify-tab {
+    width: 100%;
+    height: 7vh;
+    padding: 10px;
+    background-size: cover;
+    background: url("../assets/img/classify-bar.png") center repeat;
+    box-shadow: 0px 0px 5px darkgrey;
+  }
+  .event-wall_tag {
+    border-radius: 50%;
+    margin: 0 5%;
+    cursor: pointer;
+    border: 2px solid black;
+    font-weight: bold;
+    height: 4rem;
+    width: 4rem;
+    text-align: center;
+    line-height: 4rem;
+    font-size: 2rem;
+    color: black;
+  }
+  .event-wall_active-type {
+    border: 2px dotted black;
+    background-color: #bbbbbb;
+  }
+  .event-wall_search {
+    margin-left: 5%;
+    border-radius: 4px;
+    width: 20%;
+  }
+  .event-wall_expire-pic {
+    position: absolute;
+    width: 20%;
+    left: 82%;
+    top: -10px;
   }
 </style>

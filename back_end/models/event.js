@@ -52,6 +52,14 @@ const eventSchema = mongoose.Schema({
   participant: {
     type: Array,
     require: true
+  },
+  star: {
+    type: String,
+    require: true
+  },
+  view: {
+    type: String,
+    require: true
   }
 }, {versionKey: false})
 

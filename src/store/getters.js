@@ -21,7 +21,9 @@ const getters = {
   detail: state => state.event.detail,
   region: state => state.event.region,
   poster: state => state.event.poster,
-  participant: state => state.event.participant
+  participant: state => state.event.participant,
+  star: state => state.event.star,
+  view: state => state.event.view
 }
 
 export default getters

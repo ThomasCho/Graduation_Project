@@ -12,7 +12,9 @@ const event = {
     detail: '',
     region: '',
     poster: '',
-    participant: ''
+    participant: '',
+    star: '',
+    view: ''
   },
 
   mutations: {
@@ -54,6 +56,12 @@ const event = {
     },
     SET_PARTICIPANT: (state, participant) => {
       state.participant = participant
+    },
+    SET_STAR: (state, star) => {
+      state.star = star
+    },
+    SET_VIEW: (state, view) => {
+      state.view = view
     }
   },
 
@@ -73,6 +81,8 @@ const event = {
       commit('SET_REGION', event.region)
       commit('SET_POSTER', event.poster)
       commit('SET_PARTICIPANT', event.participant)
+      commit('SET_STAR', event.star)
+      commit('SET_VIEW', event.view)
     }
   }
 }
