@@ -9,6 +9,7 @@ import ForgetPsw from '@/components/ForgetPsw'
 import Register from '@/components/Register'
 import EventWall from '@/components/EventWall'
 import Event from '@/components/Event'
+import UserHas from '@/components/UserHas'
 
 Vue.use(Router)
 
@@ -74,6 +75,12 @@ export default new Router({
       name: 'register',
       title: '注册新账号',
       component: Register
+    },
+    {
+      path: '/userHas',
+      name: 'userHas',
+      title: '用户已',
+      component: UserHas
     },
     {
       path: '*',

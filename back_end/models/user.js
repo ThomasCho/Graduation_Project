@@ -36,6 +36,18 @@ const userSchema = mongoose.Schema({
   password: {
     type: String,
     require: true
+  },
+  hasPost: {
+    type: Array,
+    require: true
+  },
+  hasStar: {
+    type: Array,
+    require: true
+  },
+  hasJoin: {
+    type: Array,
+    require: true
   }
 }, {versionKey: false})
 

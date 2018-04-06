@@ -1,5 +1,5 @@
 <template>
-  <div style="padding: 0 20px 20px 20px">
+  <div style="padding: 20px">
     <div class="event-wall_classify-tab">
       <el-tag class="event-wall_tag"
               @click.native="chooseType('recommend')"
@@ -262,7 +262,7 @@
   }
   .event-wall_count {
     width: 98%;
-    height: 5%;
+    height: 7%;
     padding: 0 0 0 10px;
     overflow: hidden;
     line-height: 130%;
@@ -277,8 +277,8 @@
     margin: 15px 0;
   }
   .event-wall_classify-tab {
-    width: 100%;
-    height: 7vh;
+    width: 99%;
+    height: 10vh;
     padding: 10px;
     background-size: cover;
     background: url("../assets/img/classify-bar.png") center repeat;
@@ -286,7 +286,7 @@
   }
   .event-wall_tag {
     border-radius: 50%;
-    margin: 0 5%;
+    margin: 0 3%;
     cursor: pointer;
     border: 2px solid black;
     font-weight: bold;
@@ -302,7 +302,7 @@
     background-color: #bbbbbb;
   }
   .event-wall_search {
-    margin-left: 5%;
+    margin-left: 15%;
     border-radius: 4px;
     width: 20%;
   }

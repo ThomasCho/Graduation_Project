@@ -13,7 +13,7 @@ const eventSchema = mongoose.Schema({
     type: Array,
     require: true
   },
-  isFree: {
+  isCharged: {
     type: Boolean,
     require: true
   },
@@ -58,6 +58,10 @@ const eventSchema = mongoose.Schema({
     require: true
   },
   view: {
+    type: String,
+    require: true
+  },
+  owner: {
     type: String,
     require: true
   }

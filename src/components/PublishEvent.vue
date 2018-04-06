@@ -47,10 +47,10 @@
           </el-form-item>
         </el-col>
       </el-form-item>
-      <el-form-item label="收费" prop="isFree">
-        <el-switch v-model="!form.isFree"></el-switch>
+      <el-form-item label="收费" prop="isCharged">
+        <el-switch v-model="form.isCharged"></el-switch>
       </el-form-item>
-      <el-form-item label="费用" prop="money" v-if="!form.isFree">
+      <el-form-item label="费用" prop="money" v-if="form.isCharged">
         <el-input placeholder="请输入内容" v-model="form.money">
           <template slot="prepend">每人(元)：</template>
         </el-input>
@@ -102,7 +102,7 @@
           name: '',
           date: '',
           time: '',
-          isFree: true,
+          isCharged: false,
           money: '',
           type: [],
           resource: '',
@@ -209,10 +209,12 @@
         submitData.detail = this.editorContent
         submitData.region = this.center
         // 如果不收费，则money那项要清零
-        if (submitData.isFree) {
+        if (!submitData.isCharged) {
           submitData.money = ''
         }
         submitData.poster = res.msg
+        // 加上发布者是谁这一项
+        submitData.owner = this.$store.getters.email
 
         this.fetch({
           url: 'api/publishEvent',
@@ -237,7 +239,7 @@
           errMsg.push('请选择活动地点')
         }
         // 验证有没有输入活动费用
-        if (!this.form.isFree) {
+        if (this.form.isCharged) {
           if (!this.form.money) {
             errMsg.push('请输入活动费用')
           } else if (!/^[\d]+$/.test(this.form.money)) {

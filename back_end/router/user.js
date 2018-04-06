@@ -61,6 +61,7 @@ router.post('/user/register', (req, res) => {
   // 使用User model上的create方法储存数据
   let newUser = JSON.parse(JSON.stringify(req.body))
   newUser.name = newUser.gender = newUser.birthday = newUser.introduction = newUser.avatar = newUser.constellation = ''
+  newUser.hasPost = newUser.hasStar = newUser.hasJoin = []
   console.log(newUser)
   User.create(newUser, (err, user) => {
     if (err) {

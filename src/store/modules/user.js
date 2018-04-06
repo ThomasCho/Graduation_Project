@@ -11,7 +11,10 @@ const user = {
     constellation: '',
     phone: '',
     gender: '',
-    birthday: ''
+    birthday: '',
+    hasPost: [],
+    hasStar: [],
+    hasJoin: []
   },
 
   mutations: {
@@ -41,6 +44,15 @@ const user = {
     },
     SET_BIRTHDAY: (state, birthday) => {
       state.birthday = birthday
+    },
+    SET_HASPOST: (state, hasPost) => {
+      state.hasPost = hasPost
+    },
+    SET_HASSTAR: (state, hasStar) => {
+      state.hasStar = hasStar
+    },
+    SET_HASJOIN: (state, hasJoin) => {
+      state.hasJoin = hasJoin
     }
   },
 
@@ -76,6 +88,9 @@ const user = {
             commit('SET_PHONE', response.data.message.phone)
             commit('SET_GENDER', response.data.message.gender)
             commit('SET_BIRTHDAY', response.data.message.birthday)
+            commit('SET_HASPOST', response.data.message.hasPost)
+            commit('SET_HASSTAR', response.data.message.hasStar)
+            commit('SET_HASJOIN', response.data.message.hasJoin)
             resolve(response.data.message)
           } else {
             reject(response.data.message)

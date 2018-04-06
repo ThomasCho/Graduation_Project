@@ -15,6 +15,18 @@
               <i class="el-icon-info"></i>
               <span slot="title">账号资料</span>
             </el-menu-item>
+            <el-menu-item index="/userHas" :route="routers.userHas">
+              <i class="el-icon-info"></i>
+              <span slot="title">我已参加</span>
+            </el-menu-item>
+            <el-menu-item index="/userHas" :route="routers.userHas">
+              <i class="el-icon-info"></i>
+              <span slot="title">我已发布</span>
+            </el-menu-item>
+            <el-menu-item index="/userHas" :route="routers.userHas">
+              <i class="el-icon-info"></i>
+              <span slot="title">我已收藏</span>
+            </el-menu-item>
             <el-menu-item index="/logout">
               <i class="el-icon-back"></i>
               <span slot="title">退出登录</span>
@@ -31,6 +43,7 @@
 
 <script>
   import UserInfo from '@/components/UserInfo'
+  import UserHas from '@/components/UserHas'
 
   let whiteList = ['/', '/login', '/register', '/forgetPsw']
 
@@ -45,6 +58,12 @@
             name: 'info',
             title: '账号资料',
             component: UserInfo
+          },
+          userHas: {
+            path: '/userHas',
+            name: 'userHas',
+            title: 'userHas',
+            component: UserHas
           }
         }
       }

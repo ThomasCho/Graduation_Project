@@ -3,7 +3,7 @@ const event = {
     name: '',
     date: '',
     time: '',
-    isFree: '',
+    isCharged: '',
     money: '',
     type: '',
     resource: '',
@@ -14,7 +14,8 @@ const event = {
     poster: '',
     participant: '',
     star: '',
-    view: ''
+    view: '',
+    owner: ''
   },
 
   mutations: {
@@ -27,8 +28,8 @@ const event = {
     SET_TIME: (state, time) => {
       state.time = time
     },
-    SET_ISFREE: (state, isFree) => {
-      state.isFree = isFree
+    SET_ISCHARGED: (state, isCharged) => {
+      state.isCharged = isCharged
     },
     SET_MONEY: (state, money) => {
       state.money = money
@@ -62,6 +63,9 @@ const event = {
     },
     SET_VIEW: (state, view) => {
       state.view = view
+    },
+    SET_OWNER: (state, owner) => {
+      state.owner = owner
     }
   },
 
@@ -71,7 +75,7 @@ const event = {
       commit('SET_ENAME', event.name)
       commit('SET_DATE', event.date)
       commit('SET_TIME', event.time)
-      commit('SET_ISFREE', event.isFree)
+      commit('SET_ISCHARGED', event.isCharged)
       commit('SET_MONEY', event.money)
       commit('SET_TYPE', event.type)
       commit('SET_RESOURCE', event.resource)
@@ -83,6 +87,7 @@ const event = {
       commit('SET_PARTICIPANT', event.participant)
       commit('SET_STAR', event.star)
       commit('SET_VIEW', event.view)
+      commit('SET_OWNER', event.owner)
     }
   }
 }

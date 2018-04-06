@@ -1,6 +1,7 @@
 // 对活动相关操作的路由
 const express = require('express')
 const Event = require('../models/event')
+const User = require('../models/user')
 const bodyParser = require('body-parser')
 const router = express.Router()
 router.use(bodyParser.json())
@@ -19,10 +20,24 @@ router.post('/publishEvent', (req, res) => {
         message: err
       })
     } else {
-      res.json({
-        success: true,
-        message: event
+      User.find({
+        email: newEvent.owner
       })
+        .then((users) => {
+          users[0].hasPost.push(newEvent.name)
+          users[0].save(err => {
+            if (err) {
+              res.json({
+                success: false,
+                message: err
+              })
+            }
+            res.json({
+              success: true,
+              message: event
+            })
+          })
+        })
     }
   })
 })
@@ -93,10 +108,25 @@ router.post('/joinEvent', (req, res) => {
               message: err
             })
           }
-          res.json({
-            success: true,
-            message: '参加成功'
+
+          User.find({
+            email: params.userInfo.email
           })
+            .then(users => {
+              users[0].hasJoin.push(params.eventName)
+              users[0].save(err => {
+                if (err) {
+                  res.json({
+                    success: false,
+                    message: err
+                  })
+                }
+                res.json({
+                  success: true,
+                  message: '参加成功'
+                })
+              })
+            })
         })
       } else {
         res.json({
@@ -127,10 +157,32 @@ router.put('/starEvent', (req, res) => {
             message: err
           })
         }
-        res.json({
-          success: true,
-          message: '已收藏'
+
+        User.find({
+          email: req.body.byWho
         })
+          .then(users => {
+            if (users[0].hasStar.indexOf(req.body.eventName) === -1) {
+              users[0].hasStar.push(req.body.eventName)
+              users[0].save(err => {
+                if (err) {
+                  res.json({
+                    success: false,
+                    message: err
+                  })
+                }
+                res.json({
+                  success: true,
+                  message: '已收藏'
+                })
+              })
+            } else {
+              res.json({
+                success: false,
+                message: '你已收藏此活动，请勿重复收藏'
+              })
+            }
+          })
       })
     })
     .catch(err => {

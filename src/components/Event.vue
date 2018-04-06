@@ -1,6 +1,19 @@
 <template>
   <div>
     <el-form ref="form" label-position="left" label-width="100px" class="event-page_form">
+      <el-form-item label="发布人">
+        <el-card :body-style="{ padding: '0px' }" class="event-page_owner-info"
+                 :class="owner.gender === '男' ? 'event-page_card-male' : 'event-page_card-female'">
+          <img :src="owner.avatar" class="event-page_image">
+          <div style="padding: 14px;">
+            <span>{{owner.name}}</span>
+            <div class="event-page_bottom event-page_clearfix">
+              <el-button type="text" class="event-page_button">关注</el-button>
+            </div>
+          </div>
+        </el-card>
+      </el-form-item>
+
       <el-form-item label="活动海报">
         <div :style="posterStyle"></div>
       </el-form-item>
@@ -20,7 +33,7 @@
         {{showTime(item)}}
       </el-form-item>
       <el-form-item label="收费" class="event-page_form-money">
-        {{item.isFree ? '免费' : '￥' + item.money}}
+        {{item.isCharged ? '免费' : '￥' + item.money}}
       </el-form-item>
       <el-form-item label="活动类型">
         {{item.type | convertType}}
@@ -57,11 +70,11 @@
       </el-form-item>
       <div class="event-page_btns">
         <el-button-group>
-          <el-button type="success" icon="el-icon-check" round @click="handleJoin" :disabled="isExpired(item.time[0])">参加</el-button>
-          <el-button type="danger" icon="el-icon-arrow-left" round @click="handleBack" :disabled="isExpired(item.time[0])">返回</el-button>
-          <el-button type="warning" icon="el-icon-star-off" round @click="handleStar" :disabled="isExpired(item.time[0])">收藏</el-button>
+          <el-button type="success" icon="el-icon-check" round @click="handleJoin" :disabled="isExpired(item)">参加</el-button>
+          <el-button type="danger" icon="el-icon-arrow-left" round @click="handleBack" :disabled="isExpired(item)">返回</el-button>
+          <el-button type="warning" icon="el-icon-star-off" round @click="handleStar" :disabled="isExpired(item)">收藏</el-button>
         </el-button-group>
-        <span class="event-page_expire-text" v-show="isExpired(item.time[0])">已过期</span>
+        <span class="event-page_expire-text" v-show="isExpired(item)">已过期</span>
       </div>
     </el-form>
   </div>
@@ -78,7 +91,8 @@
       return {
         item: {},
         amapManager,
-        zoom: 14
+        zoom: 14,
+        owner: {}
       }
     },
     computed: {
@@ -103,7 +117,7 @@
         name: currentEvent.name,
         date: currentEvent.date,
         time: currentEvent.time,
-        isFree: currentEvent.isFree,
+        isCharged: currentEvent.isCharged,
         money: currentEvent.money,
         type: currentEvent.type,
         resource: currentEvent.resource,
@@ -114,10 +128,12 @@
         poster: currentEvent.poster,
         participant: currentEvent.participant,
         star: currentEvent.star,
-        view: currentEvent.view
+        view: currentEvent.view,
+        owner: currentEvent.owner
       }
 
       this.incView()
+      this.getOwnerInfo()
     },
     methods: {
       showTime (item) {
@@ -194,7 +210,8 @@
           url: 'api/starEvent',
           method: 'put',
           data: {
-            eventName: this.item.name
+            eventName: this.item.name,
+            byWho: this.$store.getters.email
           }
         }).then((res) => {
           if (res.data.success) {
@@ -218,8 +235,34 @@
           }
         })
       },
-      isExpired (val) {
-        return ((new Date()) - (new Date(val))) > 0
+      isExpired (item) {
+        // 因item.date和item.time是没有关联的，所以有可能会出现item.time的日期部分早于item.date的日期部分，所以要先预处理
+        if ((new Date(item.date) - new Date(item.time[0])) > 0) {
+          item.time[0] = item.date.slice(0, item.date.indexOf('T')) + item.time[0].slice(item.time[0].indexOf('T'))
+        }
+        return (new Date() - new Date(item.time[0])) > 0
+      },
+      getOwnerInfo () {
+        this.fetch({
+          url: 'api/user/' + this.item.owner,
+          method: 'get'
+        }).then((res) => {
+          if (res.data.success) {
+            this.owner = {
+              avatar: res.data.message.avatar ? 'http://localhost:3000/img/avatar/' + res.data.message.avatar + '?token=' + this.$store.getters.token : '',
+              name: res.data.message.name,
+              gender: res.data.message.gender,
+              birthday: res.data.message.birthday,
+              constellation: res.data.message.constellation,
+              phone: res.data.message.phone,
+              introduction: res.data.message.introduction
+            }
+          } else {
+            this.$message.error(res.data.message)
+          }
+        }).catch(err => {
+          this.$message.error(err)
+        })
       }
     },
     filters: {
@@ -299,5 +342,8 @@
     margin-left: 3%;
     border: 10px double red;
     user-select: none;
+  }
+  .event-page_owner-info {
+    width: 7%;
   }
 </style>
