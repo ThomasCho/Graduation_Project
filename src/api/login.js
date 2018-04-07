@@ -15,6 +15,7 @@ export function loginByEmail (email, password) {
 export function getInfo (token) {
   return fetch({
     url: 'api/user/info',
+    baseURL: '/',
     method: 'get',
     params: { token }
   })

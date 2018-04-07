@@ -77,7 +77,7 @@ export default new Router({
       component: Register
     },
     {
-      path: '/userHas',
+      path: '/userHas/:type',
       name: 'userHas',
       title: '用户已',
       component: UserHas

@@ -15,16 +15,16 @@
               <i class="el-icon-info"></i>
               <span slot="title">账号资料</span>
             </el-menu-item>
-            <el-menu-item index="/userHas" :route="routers.userHas">
-              <i class="el-icon-info"></i>
+            <el-menu-item index="/hasJoin" :route="routers.hasJoin">
+              <i class="el-icon-plus"></i>
               <span slot="title">我已参加</span>
             </el-menu-item>
-            <el-menu-item index="/userHas" :route="routers.userHas">
-              <i class="el-icon-info"></i>
+            <el-menu-item index="/hasPost" :route="routers.hasPost">
+              <i class="el-icon-edit"></i>
               <span slot="title">我已发布</span>
             </el-menu-item>
-            <el-menu-item index="/userHas" :route="routers.userHas">
-              <i class="el-icon-info"></i>
+            <el-menu-item index="/hasStar" :route="routers.hasStar">
+              <i class="el-icon-star-on"></i>
               <span slot="title">我已收藏</span>
             </el-menu-item>
             <el-menu-item index="/logout">
@@ -59,12 +59,18 @@
             title: '账号资料',
             component: UserInfo
           },
-          userHas: {
-            path: '/userHas',
-            name: 'userHas',
-            title: 'userHas',
+          hasPost: {
+            path: '/userHas/post',
             component: UserHas
-          }
+          },
+          hasStar: {
+            path: '/userHas/star',
+            component: UserHas
+          },
+          hasJoin: {
+            path: '/userHas/join',
+            component: UserHas
+          },
         }
       }
     },

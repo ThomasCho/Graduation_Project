@@ -1,6 +1,6 @@
 <template>
   <div style="padding: 20px">
-    <div class="event-wall_classify-tab">
+    <div class="event-wall_classify-tab" v-if="!pageType">
       <el-tag class="event-wall_tag"
               @click.native="chooseType('recommend')"
               :class="{ 'event-wall_active-type': isActive === 'recommend' }">
@@ -35,7 +35,7 @@
       </el-input>
       <el-button type="primary" icon="el-icon-search" @click="search">搜索</el-button>
     </div>
-    <p class="event-wall_title">在活动墙，寻找你所需</p>
+    <p class="event-wall_title">{{pageTitle}}</p>
     <waterfall :line-gap="200" :watch="items" :grow="grow"
                ref="waterfall" @click.native="shuffle" v-loading.fullscreen.lock="fullscreenLoading">
       <waterfall-slot
@@ -48,7 +48,9 @@
         @click.native="viewEvent(index)"
       >
         <div class="item" :style="item.style" :index="item.index">
-          <img src="../assets/img/expired.png" class="event-wall_expire-pic" v-show="isExpired(item.time[0])">
+          <img src="../assets/img/expired.png" class="event-wall_expire-pic" v-show="isExpired(item)">
+          <img src="../assets/img/cancel.png" class="event-wall_cancel-pic"
+               v-show="pageType === 'post'" @click.stop="unpostEvent(item)">
           <div class="event-wall_poster" :style="getPosterStyle(item)"></div>
           <div class="event-wall_name" :title="item.name">名称：{{item.name}}</div>
           <div class="event-wall_time" :title="showTime(item)">时间：{{showTime(item)}}</div>
@@ -65,6 +67,10 @@
         </div>
       </waterfall-slot>
     </waterfall>
+    <div v-if="!items.length" class="event-wall_find-no-items">
+      <div>暂找不到活动~</div>
+      <img src="../assets/img/no_result.gif" style="width: 200px;" draggable="false">
+    </div>
   </div>
 </template>
 
@@ -78,6 +84,12 @@
       Waterfall,
       WaterfallSlot
     },
+    props: {
+      pageType: {
+        type: String,
+        required: false
+      }
+    },
     data () {
       return {
         items: [],
@@ -87,18 +99,37 @@
         fullscreenLoading: false
       }
     },
+    computed: {
+      pageTitle () {
+        if (!this.pageType) {
+          return '在活动墙，寻找你所需'
+        } else if (this.pageType === 'post') {
+          return '你已发布'
+        } else if (this.pageType === 'star') {
+          return '你已收藏'
+        } else if (this.pageType === 'join') {
+          return '你已参加'
+        }
+      }
+    },
     mounted () {
-      this.loadEvent()
+      this.loadEvent('', this.pageType)
     },
     methods: {
-      loadEvent (type) {
+      loadEvent (searchType, pageType) {
         let vm = this
 
+        vm.items = []
         vm.fullscreenLoading = true
-        this.fetch({
+        vm.fetch({
           url: 'api/loadEvent',
+          baseURL: '/',
           method: 'get',
-          params: { type }
+          params: {
+            searchType,
+            pageType,
+            user: this.$store.getters.email
+          }
         }).then((res) => {
           if (res.data.success) {
             let items = res.data.message.map((val, index) => {
@@ -111,18 +142,18 @@
               }
               return val
             })
-            this.items = JSON.parse(JSON.stringify(items))
+            vm.items = JSON.parse(JSON.stringify(items))
             vm.fullscreenLoading = false
           } else {
-            this.$message.error(res.data.message)
+            vm.$message.error(res.data.message)
           }
         }).catch(err => {
-          this.$message.error(err)
+          vm.$message.error(err)
         })
 
-        this.$notify.info({
+        vm.$notify.info({
           title: '',
-          message: this.$createElement('span', { style: 'color: #909399'}, '任意点击可刷新'),
+          message: vm.$createElement('span', { style: 'color: #909399'}, '任意点击可刷新'),
           position: 'bottom-right'
         })
       },
@@ -132,7 +163,6 @@
         })
       },
       viewEvent (val) {
-        // this.$store.dispatch('ChooseEvent', this.items[val])
         localStorage.setItem('currentEvent', JSON.stringify(this.items[val]))
         this.$router.push({path: '/event'})
       },
@@ -170,7 +200,37 @@
         this.loadEvent(this.searchWord)
       },
       isExpired (val) {
-        return ((new Date()) - (new Date(val))) > 0
+        if ((new Date(val.date) - new Date(val.time[0])) > 0) {
+          val.time[0] = val.date.slice(0, val.date.indexOf('T')) + val.time[0].slice(val.time[0].indexOf('T'))
+        }
+        return (new Date() - new Date(val.time[0])) > 0
+      },
+      unpostEvent (item) {
+        this.fetch({
+          url: 'api/unpublishEvent',
+          method: 'delete',
+          baseURL: '/',
+          data: {
+            eventName: item.name,
+            userEmail: this.$store.getters.email
+          }
+        }).then((res) => {
+          if (res.data.success) {
+            this.$message({
+              message: res.data.message,
+              type: 'success'
+            })
+            // 因为事件捕获阶段已把活动信息存进localStorage，所以现在撤销发布了，要清掉localStorage；并重定向回eventWall
+            localStorage.removeItem('currentEvent')
+            // 重新加载已发布的活动
+            this.loadEvent('', 'post')
+            // this.$router.replace({path: '/eventWall'})
+          } else {
+            this.$message.error(res.data.message)
+          }
+        }).catch(err => {
+          this.$message.error(err)
+        })
       }
     },
     filters: {
@@ -311,5 +371,15 @@
     width: 20%;
     left: 82%;
     top: -10px;
+  }
+  .event-wall_cancel-pic {
+    position: absolute;
+    width: 10%;
+    left: 93%;
+    top: -9px;
+  }
+  .event-wall_find-no-items {
+    text-align: center;
+    margin-top: 10vh;
   }
 </style>

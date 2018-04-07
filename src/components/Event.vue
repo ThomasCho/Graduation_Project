@@ -70,9 +70,18 @@
       </el-form-item>
       <div class="event-page_btns">
         <el-button-group>
-          <el-button type="success" icon="el-icon-check" round @click="handleJoin" :disabled="isExpired(item)">参加</el-button>
-          <el-button type="danger" icon="el-icon-arrow-left" round @click="handleBack" :disabled="isExpired(item)">返回</el-button>
-          <el-button type="warning" icon="el-icon-star-off" round @click="handleStar" :disabled="isExpired(item)">收藏</el-button>
+          <el-button type="success" icon="el-icon-check" round
+                     @click="handleJoin" :disabled="isExpired(item)">
+            {{canJoin ? '参加' : '撤销参加'}}
+          </el-button>
+          <el-button type="danger" icon="el-icon-arrow-left" round
+                     @click="handleBack" :disabled="isExpired(item)">
+            返回
+          </el-button>
+          <el-button type="warning" icon="el-icon-star-off" round
+                     @click="handleStar" :disabled="isExpired(item)">
+            {{canStar ? '收藏' : '撤销收藏'}}
+          </el-button>
         </el-button-group>
         <span class="event-page_expire-text" v-show="isExpired(item)">已过期</span>
       </div>
@@ -92,7 +101,9 @@
         item: {},
         amapManager,
         zoom: 14,
-        owner: {}
+        owner: {},
+        canJoin: true,
+        canStar: true
       }
     },
     computed: {
@@ -134,6 +145,7 @@
 
       this.incView()
       this.getOwnerInfo()
+      this.judgeBtnType()
     },
     methods: {
       showTime (item) {
@@ -159,6 +171,13 @@
         return 'http://localhost:3000/img/avatar/' + val + '?token=' + this.$store.getters.token
       },
       handleJoin () {
+        if (this.canJoin) {
+          this.joinEvent()
+        } else {
+          this.unjoinEvent()
+        }
+      },
+      joinEvent () {
         // 先获取当前用户的最新信息，store中存储的可能是久的信息
         this.fetch({
           url: 'api/user/' + this.$store.getters.email,
@@ -198,6 +217,28 @@
             } else {
               this.$message.error(res.data.message)
             }
+          }).catch(err => {
+          this.$message.error(err)
+        })
+      },
+      unjoinEvent () {
+        this.fetch({
+          url: 'api/unjoinEvent',
+          method: 'post',
+          data: {
+            eventName: this.item.name,
+            userEmail: this.$store.getters.email
+          }
+        }).then(res => {
+          if (res.data.success) {
+            this.$message({
+              message: res.data.message,
+              type: 'success'
+            })
+            this.canJoin = true
+          } else {
+            this.$message.error(res.data.message)
+          }
         }).catch(err => {
           this.$message.error(err)
         })
@@ -206,6 +247,13 @@
         this.$router.replace({ path: '/eventWall' })
       },
       handleStar () {
+        if (this.canStar) {
+          this.starEvent()
+        } else {
+          this.unstarEvent()
+        }
+      },
+      starEvent () {
         this.fetch({
           url: 'api/starEvent',
           method: 'put',
@@ -219,6 +267,28 @@
               message: res.data.message,
               type: 'success'
             })
+          } else {
+            this.$message.error(res.data.message)
+          }
+        }).catch(err => {
+          this.$message.error(err)
+        })
+      },
+      unstarEvent () {
+        this.fetch({
+          url: 'api/unstarEvent',
+          method: 'put',
+          data: {
+            eventName: this.item.name,
+            userEmail: this.$store.getters.email
+          }
+        }).then((res) => {
+          if (res.data.success) {
+            this.$message({
+              message: res.data.message,
+              type: 'success'
+            })
+            this.canStar = true
           } else {
             this.$message.error(res.data.message)
           }
@@ -256,6 +326,25 @@
               constellation: res.data.message.constellation,
               phone: res.data.message.phone,
               introduction: res.data.message.introduction
+            }
+          } else {
+            this.$message.error(res.data.message)
+          }
+        }).catch(err => {
+          this.$message.error(err)
+        })
+      },
+      judgeBtnType () {
+        this.fetch({
+          url: 'api/user/' + this.$store.getters.email,
+          method: 'get'
+        }).then((res) => {
+          if (res.data.success) {
+            if (res.data.message.hasJoin.indexOf(this.item.name) !== -1) {
+              this.canJoin = false
+            }
+            if (res.data.message.hasStar.indexOf(this.item.name) !== -1) {
+              this.canStar = false
             }
           } else {
             this.$message.error(res.data.message)
