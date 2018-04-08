@@ -68,6 +68,31 @@
           </el-col>
         </el-row>
       </el-form-item>
+      <el-popover
+        ref="comment"
+        placement="top"
+        width="400"
+        trigger="click">
+        <el-input
+          type="textarea"
+          :rows="2"
+          placeholder="请输入内容"
+          v-model="commentWord">
+        </el-input>
+        <el-button class="event-page_confirm-btn" @click="handleComment" size="small">确定</el-button>
+      </el-popover>
+      <el-card class="event-page_box-card">
+        <div slot="header" class="event-page_clearfix">
+          <span>留言区</span>
+          <el-button style="float: right; padding: 3px 0" type="text" v-popover:comment>我要留言</el-button>
+        </div>
+        <div v-if="!item.comment.length" class="event-page_no-comment">无评论</div>
+        <div class="event-page_item" v-for="val in item.comment" v-else>
+          <span class="event-page_comment-user">{{val | convertUserInComment}}</span>
+          <span class="event-page_comment-time">{{val.time}}</span>
+          <span class="event-page_comment-word">{{val.word}}</span>
+        </div>
+      </el-card>
       <div class="event-page_btns">
         <el-button-group>
           <el-button type="success" icon="el-icon-check" round
@@ -103,7 +128,8 @@
         zoom: 14,
         owner: {},
         canJoin: true,
-        canStar: true
+        canStar: true,
+        commentWord: ''
       }
     },
     computed: {
@@ -140,7 +166,8 @@
         participant: currentEvent.participant,
         star: currentEvent.star,
         view: currentEvent.view,
-        owner: currentEvent.owner
+        owner: currentEvent.owner,
+        comment: currentEvent.comment
       }
 
       this.incView()
@@ -352,11 +379,39 @@
         }).catch(err => {
           this.$message.error(err)
         })
+      },
+      handleComment () {
+        this.fetch({
+          url: 'api/commentEvent',
+          method: 'post',
+          data: {
+            eventName: this.item.name,
+            userName: this.$store.getters.name,
+            userEmail: this.$store.getters.email,
+            word: this.commentWord
+          }
+        }).then((res) => {
+          if (res.data.success) {
+            this.item.comment = res.data.message
+            this.$message({
+              message: '评论成功',
+              type: 'success'
+            })
+            this.commentWord = ''
+          } else {
+            this.$message.error(res.data.message)
+          }
+        }).catch(err => {
+          this.$message.error(err)
+        })
       }
     },
     filters: {
       convertType (val) {
         return val.join(' / ')
+      },
+      convertUserInComment (val) {
+        return val.userName + '(' + val.userEmail + ')' + ': '
       }
     }
   }
@@ -434,5 +489,34 @@
   }
   .event-page_owner-info {
     width: 7%;
+  }
+  .event-page_box-card {
+    width: 50%;
+  }
+  .event-page_item {
+    margin-bottom: 18px;
+  }
+  .event-page_comment-user {
+    color: red;
+    width: 13%;
+    display: inline-block;
+  }
+  .event-page_comment-time {
+    float: right;
+    font-size: 0.8rem;
+  }
+  .event-page_comment-word {
+    display: block;
+    text-indent: 5%;
+    margin-top: 10px;
+  }
+  .event-page_confirm-btn {
+    float: right;
+    margin-top: 10px;
+  }
+  .event-page_no-comment {
+    text-align: center;
+    font-size: 0.9rem;
+    color: #999999;
   }
 </style>

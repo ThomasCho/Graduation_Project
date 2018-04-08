@@ -89,8 +89,8 @@ let searchClassify = (req, res) => {
   } else if (queryType === 'hiking') {
     queryType = '旅行'
   }
-  // 类型包含这个关键字，或名字匹配到这个关键字
-  Event.find({'$or': [{'type': queryType}, {'name': queryType}]})
+  // 类型包含这个关键字，或名字匹配到这个关键字，或者发布者是这个关键字
+  Event.find({'$or': [{'type': queryType}, {'name': queryType}, {'owner': queryType}]})
     .then(events => {
       res.json({
         success: true,
@@ -127,6 +127,7 @@ router.post('/publishEvent', (req, res) => {
   newEvent.participant = []
   newEvent.star = '0'
   newEvent.view = '0'
+  newEvent.comment = []
   Event.create(newEvent, (err, event) => {
     if (err) {
       res.json({
@@ -422,6 +423,40 @@ router.put('/incView', (req, res) => {
           success: true,
           message: ''
         })
+      })
+    })
+    .catch(err => {
+      res.json({
+        success: false,
+        message: err
+      })
+    })
+})
+
+// 评论活动
+router.post('/commentEvent', (req, res) => {
+  Event.find({
+    name: req.body.eventName
+  })
+    .then(events => {
+      events[0].comment.push({
+        userName: req.body.userName,
+        userEmail: req.body.userEmail,
+        word: req.body.word,
+        time: new Date().toLocaleString()
+      })
+      events[0].save(err => {
+        if (err) {
+          res.json({
+            success: false,
+            message: err
+          })
+        } else {
+          res.json({
+            success: true,
+            message: events[0].comment
+          })
+        }
       })
     })
     .catch(err => {

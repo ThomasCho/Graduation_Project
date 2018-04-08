@@ -64,6 +64,10 @@ const eventSchema = mongoose.Schema({
   owner: {
     type: String,
     require: true
+  },
+  comment: {
+    type: Array,
+    require: true
   }
 }, {versionKey: false})
 

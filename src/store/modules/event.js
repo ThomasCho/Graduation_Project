@@ -15,7 +15,8 @@ const event = {
     participant: '',
     star: '',
     view: '',
-    owner: ''
+    owner: '',
+    comment: []
   },
 
   mutations: {
@@ -66,6 +67,9 @@ const event = {
     },
     SET_OWNER: (state, owner) => {
       state.owner = owner
+    },
+    SET_COMMENT: (state, comment) => {
+      state.comment = comment
     }
   },
 
@@ -88,6 +92,7 @@ const event = {
       commit('SET_STAR', event.star)
       commit('SET_VIEW', event.view)
       commit('SET_OWNER', event.owner)
+      commit('SET_COMMENT', event.comment)
     }
   }
 }

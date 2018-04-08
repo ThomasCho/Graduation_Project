@@ -27,7 +27,8 @@ const getters = {
   participant: state => state.event.participant,
   star: state => state.event.star,
   view: state => state.event.view,
-  owner: state => state.event.owner
+  owner: state => state.event.owner,
+  comment: state => state.event.comment
 }
 
 export default getters
