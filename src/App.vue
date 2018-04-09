@@ -77,12 +77,12 @@
     computed: {
       elMainStyle () {
         return {
-          height: whiteList.indexOf(this.$route.path) === -1 ? '92vh' : '100vh',
+          height: whiteList.indexOf(this.$route.path) === -1 && !this.$store.getters.isAdmin ? '92vh' : '100vh',
           padding: '0'
         }
       },
       showHeader () {
-        return whiteList.indexOf(this.$route.path) === -1
+        return whiteList.indexOf(this.$route.path) === -1 && !this.$store.getters.isAdmin
       }
     },
     methods: {

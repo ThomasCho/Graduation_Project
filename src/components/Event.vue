@@ -167,7 +167,8 @@
         star: currentEvent.star,
         view: currentEvent.view,
         owner: currentEvent.owner,
-        comment: currentEvent.comment
+        comment: currentEvent.comment,
+        auth: currentEvent.auth
       }
 
       this.incView()

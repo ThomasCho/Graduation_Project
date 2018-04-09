@@ -68,9 +68,14 @@
       onLogin () {
         this.$refs.form.validate((valid) => {
           if (valid) {
-            this.$store.dispatch('LoginByEmail', this.form).then(() => {
-              this.$message.success('登录成功')
-              this.$router.push({ path: '/main' })
+            this.$store.dispatch('LoginByEmail', this.form).then((res) => {
+              if (res.message.isAdmin === 1) {
+                this.$message.success('登录成功')
+                this.$router.push({ path: '/admin' })
+              } else {
+                this.$message.success('登录成功')
+                this.$router.push({ path: '/main' })
+              }
             }).catch(err => {
               this.$message.error(err)
             })

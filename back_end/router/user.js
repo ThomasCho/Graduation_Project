@@ -62,6 +62,7 @@ router.post('/user/register', (req, res) => {
   let newUser = JSON.parse(JSON.stringify(req.body))
   newUser.name = newUser.gender = newUser.birthday = newUser.introduction = newUser.avatar = newUser.constellation = ''
   newUser.hasPost = newUser.hasStar = newUser.hasJoin = []
+  newUser.isAdmin = 0
   console.log(newUser)
   User.create(newUser, (err, user) => {
     if (err) {

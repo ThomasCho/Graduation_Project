@@ -9,7 +9,12 @@ router.beforeEach((to, from, next) => {
     } else {
       // 拉取user_info
       store.dispatch('GetInfo').then(() => {
-        next()
+        // 又不是管理员，又想跳转到管理员界面的，重导向到403页面
+        if (store.getters.isAdmin !== 1 && to.path === '/admin') {
+          next({path: '/403'})
+        } else {
+          next()
+        }
       }).catch(() => {
         store.dispatch('LogOut').then(() => {
           next({path: '/login'})

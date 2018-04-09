@@ -10,6 +10,7 @@ import Register from '@/components/Register'
 import EventWall from '@/components/EventWall'
 import Event from '@/components/Event'
 import UserHas from '@/components/UserHas'
+import Admin from '@/components/Admin'
 
 Vue.use(Router)
 
@@ -81,6 +82,12 @@ export default new Router({
       name: 'userHas',
       title: '用户已',
       component: UserHas
+    },
+    {
+      path: '/admin',
+      name: 'admin',
+      title: '管理员页面',
+      component: Admin
     },
     {
       path: '*',

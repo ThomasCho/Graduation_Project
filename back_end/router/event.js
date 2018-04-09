@@ -18,7 +18,9 @@ let pageClassify = (req, res) => {
           'name': {'$in': users[0].hasPost}
         })
           .then(events => {
-            console.log(events)
+            events = events.filter(val => {
+              return val.auth === 1
+            })
             res.json({
               success: true,
               message: events
@@ -36,7 +38,9 @@ let pageClassify = (req, res) => {
           'name': {'$in': users[0].hasStar}
         })
           .then(events => {
-            console.log(events)
+            events = events.filter(val => {
+              return val.auth === 1
+            })
             res.json({
               success: true,
               message: events
@@ -54,7 +58,9 @@ let pageClassify = (req, res) => {
           'name': {'$in': users[0].hasJoin}
         })
           .then(events => {
-            console.log(events)
+            events = events.filter(val => {
+              return val.auth === 1
+            })
             res.json({
               success: true,
               message: events
@@ -92,6 +98,9 @@ let searchClassify = (req, res) => {
   // 类型包含这个关键字，或名字匹配到这个关键字，或者发布者是这个关键字
   Event.find({'$or': [{'type': queryType}, {'name': queryType}, {'owner': queryType}]})
     .then(events => {
+      events = events.filter(val => {
+        return val.auth === 1
+      })
       res.json({
         success: true,
         message: events
@@ -108,6 +117,9 @@ let searchClassify = (req, res) => {
 let noClassify = (req, res) => {
   Event.find({})
     .then(events => {
+      events = events.filter(val => {
+        return val.auth === 1
+      })
       res.json({
         success: true,
         message: events
@@ -125,6 +137,7 @@ let noClassify = (req, res) => {
 router.post('/publishEvent', (req, res) => {
   let newEvent = JSON.parse(JSON.stringify(req.body))
   newEvent.participant = []
+  newEvent.auth = 0
   newEvent.star = '0'
   newEvent.view = '0'
   newEvent.comment = []
@@ -201,6 +214,26 @@ router.get('/loadEvent', (req, res) => {
     // 无任何分类，搜全部活动
     noClassify(req, res)
   }
+})
+
+// 获取未审核的活动
+router.get('/loadUnAuthEvent', (req, res) => {
+  Event.find({})
+    .then(events => {
+      events = events.filter(val => {
+        return val.auth === 0
+      })
+      res.json({
+        success: true,
+        message: events
+      })
+    })
+    .catch(err => {
+      res.json({
+        success: false,
+        message: err
+      })
+    })
 })
 
 // 加入活动
@@ -455,6 +488,64 @@ router.post('/commentEvent', (req, res) => {
           res.json({
             success: true,
             message: events[0].comment
+          })
+        }
+      })
+    })
+    .catch(err => {
+      res.json({
+        success: false,
+        message: err
+      })
+    })
+})
+
+// 批准活动
+router.put('/authEvent', (req, res) => {
+  Event.find({
+    name: req.body.eventName
+  })
+    .then(events => {
+      events[0].auth = 1
+      events[0].save(err => {
+        if (err) {
+          res.json({
+            success: false,
+            message: err
+          })
+        } else {
+          res.json({
+            success: true,
+            message: '已批准该活动'
+          })
+        }
+      })
+    })
+    .catch(err => {
+      res.json({
+        success: false,
+        message: err
+      })
+    })
+})
+
+// 驳回活动
+router.put('/unAuthEvent', (req, res) => {
+  Event.find({
+    name: req.body.eventName
+  })
+    .then(events => {
+      events[0].auth = 0
+      events[0].save(err => {
+        if (err) {
+          res.json({
+            success: false,
+            message: err
+          })
+        } else {
+          res.json({
+            success: true,
+            message: '已驳回该活动'
           })
         }
       })

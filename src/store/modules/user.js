@@ -14,7 +14,8 @@ const user = {
     birthday: '',
     hasPost: [],
     hasStar: [],
-    hasJoin: []
+    hasJoin: [],
+    isAdmin: ''
   },
 
   mutations: {
@@ -53,6 +54,9 @@ const user = {
     },
     SET_HASJOIN: (state, hasJoin) => {
       state.hasJoin = hasJoin
+    },
+    SET_ISADMIN: (state, isAdmin) => {
+      state.isAdmin = isAdmin
     }
   },
 
@@ -91,6 +95,7 @@ const user = {
             commit('SET_HASPOST', response.data.message.hasPost)
             commit('SET_HASSTAR', response.data.message.hasStar)
             commit('SET_HASJOIN', response.data.message.hasJoin)
+            commit('SET_ISADMIN', response.data.message.isAdmin)
             resolve(response.data.message)
           } else {
             reject(response.data.message)

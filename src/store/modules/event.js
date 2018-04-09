@@ -16,7 +16,8 @@ const event = {
     star: '',
     view: '',
     owner: '',
-    comment: []
+    comment: [],
+    auth: ''
   },
 
   mutations: {
@@ -70,6 +71,9 @@ const event = {
     },
     SET_COMMENT: (state, comment) => {
       state.comment = comment
+    },
+    SET_AUTH: (state, auth) => {
+      state.auth = auth
     }
   },
 
@@ -93,6 +97,7 @@ const event = {
       commit('SET_VIEW', event.view)
       commit('SET_OWNER', event.owner)
       commit('SET_COMMENT', event.comment)
+      commit('SET_AUTH', event.auth)
     }
   }
 }

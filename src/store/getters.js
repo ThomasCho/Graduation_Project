@@ -11,6 +11,7 @@ const getters = {
   hasPost: state => state.user.hasPost,
   hasStar: state => state.user.hasStar,
   hasJoin: state => state.user.hasJoin,
+  isAdmin: state => state.user.isAdmin,
 
   Ename: state => state.event.name,
   date: state => state.event.date,
@@ -28,7 +29,8 @@ const getters = {
   star: state => state.event.star,
   view: state => state.event.view,
   owner: state => state.event.owner,
-  comment: state => state.event.comment
+  comment: state => state.event.comment,
+  auth: state => state.event.auth
 }
 
 export default getters

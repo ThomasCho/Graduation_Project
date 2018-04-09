@@ -68,6 +68,10 @@ const eventSchema = mongoose.Schema({
   comment: {
     type: Array,
     require: true
+  },
+  auth: {
+    type: Number,
+    require: true
   }
 }, {versionKey: false})
 

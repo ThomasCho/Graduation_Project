@@ -48,6 +48,10 @@ const userSchema = mongoose.Schema({
   hasJoin: {
     type: Array,
     require: true
+  },
+  isAdmin: {
+    type: Number,
+    require: true
   }
 }, {versionKey: false})
 
