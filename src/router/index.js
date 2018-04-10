@@ -11,6 +11,9 @@ import EventWall from '@/components/EventWall'
 import Event from '@/components/Event'
 import UserHas from '@/components/UserHas'
 import Admin from '@/components/Admin'
+import HasFollow from '@/components/HasFollow'
+import FollowBy from '@/components/FollowBy'
+import EventCard from '@/components/common/event_card'
 
 Vue.use(Router)
 
@@ -18,7 +21,7 @@ export default new Router({
   mode: 'history',
   routes: [
     {
-      path: '403',
+      path: '/403',
       name: '403',
       title: '无权限访问',
       component: Error
@@ -88,6 +91,24 @@ export default new Router({
       name: 'admin',
       title: '管理员页面',
       component: Admin
+    },
+    {
+      path: '/hasFollow',
+      name: 'hasFollow',
+      title: '已关注',
+      component: HasFollow
+    },
+    {
+      path: '/followBy',
+      name: 'followBy',
+      title: '被关注',
+      component: FollowBy
+    },
+    {
+      path: '/eventCard/:id',
+      name: 'eventCard',
+      title: '活动卡片',
+      component: EventCard
     },
     {
       path: '*',

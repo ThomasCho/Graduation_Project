@@ -61,7 +61,7 @@ router.post('/user/register', (req, res) => {
   // 使用User model上的create方法储存数据
   let newUser = JSON.parse(JSON.stringify(req.body))
   newUser.name = newUser.gender = newUser.birthday = newUser.introduction = newUser.avatar = newUser.constellation = ''
-  newUser.hasPost = newUser.hasStar = newUser.hasJoin = []
+  newUser.hasPost = newUser.hasStar = newUser.hasJoin = newUser.hasFollow = newUser.followBy = []
   newUser.isAdmin = 0
   console.log(newUser)
   User.create(newUser, (err, user) => {
@@ -111,7 +111,8 @@ router.put('/user/:email', (req, res) => {
         constellation: req.body.constellation,
         phone: req.body.phone,
         gender: req.body.gender,
-        birthday: req.body.birthday
+        birthday: req.body.birthday,
+        hobby: req.body.hobby
       }
     }, {
       new: true

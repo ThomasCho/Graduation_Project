@@ -15,7 +15,10 @@ const user = {
     hasPost: [],
     hasStar: [],
     hasJoin: [],
-    isAdmin: ''
+    isAdmin: '',
+    hobby: '',
+    hasFollow: [],
+    followBy: []
   },
 
   mutations: {
@@ -57,6 +60,15 @@ const user = {
     },
     SET_ISADMIN: (state, isAdmin) => {
       state.isAdmin = isAdmin
+    },
+    SET_HOBBY: (state, hobby) => {
+      state.hobby = hobby
+    },
+    SET_HASFOLLOW: (state, hasFollow) => {
+      state.hasFollow = hasFollow
+    },
+    SET_FOLLOWBY: (state, followBy) => {
+      state.followBy = followBy
     }
   },
 
@@ -96,6 +108,9 @@ const user = {
             commit('SET_HASSTAR', response.data.message.hasStar)
             commit('SET_HASJOIN', response.data.message.hasJoin)
             commit('SET_ISADMIN', response.data.message.isAdmin)
+            commit('SET_HOBBY', response.data.message.hobby)
+            commit('SET_HASFOLLOW', response.data.message.hasFollow)
+            commit('SET_FOLLOWBY', response.data.message.followBy)
             resolve(response.data.message)
           } else {
             reject(response.data.message)

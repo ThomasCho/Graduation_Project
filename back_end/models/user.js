@@ -52,6 +52,18 @@ const userSchema = mongoose.Schema({
   isAdmin: {
     type: Number,
     require: true
+  },
+  hobby: {
+    type: String,
+    require: false
+  },
+  hasFollow: {
+    type: Array,
+    require: true
+  },
+  followBy: {
+    type: Array,
+    require: true
   }
 }, {versionKey: false})
 

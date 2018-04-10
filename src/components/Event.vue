@@ -8,7 +8,13 @@
           <div style="padding: 14px;">
             <span>{{owner.name}}</span>
             <div class="event-page_bottom event-page_clearfix">
-              <el-button type="text" class="event-page_button">关注</el-button>
+              <div v-show="owner.email !== currentUserInfo.email">
+                <el-button type="text" class="event-page_button"
+                           v-if="currentUserInfo.hasFollow.indexOf(owner.email) === -1"
+                           @click="followSB(owner.email)">关注</el-button>
+                <el-button type="text" class="event-page_button" @click="unfollowSB(owner.email)"
+                           style="color: palevioletred" v-else>取消关注</el-button>
+              </div>
             </div>
           </div>
         </el-card>
@@ -57,11 +63,18 @@
                   :offset="index > 0 ? 1 : 0">
             <el-card :body-style="{ padding: '0px' }"
                      :class="person.gender === '男' ? 'event-page_card-male' : 'event-page_card-female'">
-              <img :src="getPersonAvatar(person.avatar)" class="event-page_image">
+              <img v-if="!person.avatar" src="../assets/img/no_avatar.png" class="event-page_image">
+              <img v-else :src="getPersonAvatar(person.avatar)" class="event-page_image">
               <div style="padding: 14px;">
                 <span>{{person.name}}</span>
                 <div class="event-page_bottom event-page_clearfix">
-                  <el-button type="text" class="event-page_button">关注</el-button>
+                  <div v-show="owner.email !== currentUserInfo.email && person.email !== currentUserInfo.email">
+                    <el-button type="text" class="event-page_button"
+                               v-if="currentUserInfo.hasFollow.indexOf(person.email) === -1"
+                               @click="followSB(person.email)">关注</el-button>
+                    <el-button type="text" class="event-page_button" @click="unfollowSB(person.email)"
+                               style="color: palevioletred" v-else>取消关注</el-button>
+                  </div>
                 </div>
               </div>
             </el-card>
@@ -129,7 +142,8 @@
         owner: {},
         canJoin: true,
         canStar: true,
-        commentWord: ''
+        commentWord: '',
+        currentUserInfo: {}
       }
     },
     computed: {
@@ -173,6 +187,7 @@
 
       this.incView()
       this.getOwnerInfo()
+      this.getCurrentUserInfo()
       this.judgeBtnType()
     },
     methods: {
@@ -205,47 +220,52 @@
           this.unjoinEvent()
         }
       },
-      joinEvent () {
-        // 先获取当前用户的最新信息，store中存储的可能是久的信息
+      getCurrentUserInfo () {
         this.fetch({
           url: 'api/user/' + this.$store.getters.email,
           method: 'get'
         })
           .then((res) => {
             if (res.data.success) {
-              this.fetch({
-                url: 'api/joinEvent',
-                method: 'post',
-                data: {
-                  eventName: this.item.name,
-                  userInfo: {
-                    avatar: res.data.message.avatar,
-                    name: res.data.message.name,
-                    email: this.$store.getters.email,
-                    introduction: res.data.message.introduction,
-                    constellation: res.data.message.constellation,
-                    phone: res.data.message.phone,
-                    gender: res.data.message.gender,
-                    birthday: res.data.message.birthday
-                  }
-                }
-              }).then((res) => {
-                if (res.data.success) {
-                  this.$message({
-                    message: '已成功加入活动',
-                    type: 'success'
-                  })
-                  this.handleBack()
-                } else {
-                  this.$message.error(res.data.message)
-                }
-              }).catch(err => {
-                this.$message.error(err)
-              })
+              this.currentUserInfo = res.data.message
             } else {
               this.$message.error(res.data.message)
             }
           }).catch(err => {
+          this.$message.error(err)
+        })
+      },
+      joinEvent () {
+        this.fetch({
+          url: 'api/joinEvent',
+          method: 'post',
+          data: {
+            eventName: this.item.name,
+            userInfo: {
+              avatar: this.currentUserInfo.avatar,
+              name: this.currentUserInfo.name,
+              email: this.$store.getters.email,
+              introduction: this.currentUserInfo.introduction,
+              constellation: this.currentUserInfo.constellation,
+              phone: this.currentUserInfo.phone,
+              gender: this.currentUserInfo.gender,
+              birthday: this.currentUserInfo.birthday,
+              hobby: this.currentUserInfo.hobby,
+              hasFollow: this.currentUserInfo.hasFollow,
+              followBy: this.currentUserInfo.followBy
+            }
+          }
+        }).then((res) => {
+          if (res.data.success) {
+            this.$message({
+              message: '已成功加入活动',
+              type: 'success'
+            })
+            this.handleBack()
+          } else {
+            this.$message.error(res.data.message)
+          }
+        }).catch(err => {
           this.$message.error(err)
         })
       },
@@ -263,7 +283,7 @@
               message: res.data.message,
               type: 'success'
             })
-            this.canJoin = true
+            this.handleBack()
           } else {
             this.$message.error(res.data.message)
           }
@@ -295,6 +315,7 @@
               message: res.data.message,
               type: 'success'
             })
+            this.canStar = false
           } else {
             this.$message.error(res.data.message)
           }
@@ -353,7 +374,11 @@
               birthday: res.data.message.birthday,
               constellation: res.data.message.constellation,
               phone: res.data.message.phone,
-              introduction: res.data.message.introduction
+              introduction: res.data.message.introduction,
+              hobby: res.data.message.hobby,
+              hasFollow: res.data.message.hasFollow,
+              followBy: res.data.message.followBy,
+              email: res.data.message.email
             }
           } else {
             this.$message.error(res.data.message)
@@ -399,6 +424,50 @@
               type: 'success'
             })
             this.commentWord = ''
+          } else {
+            this.$message.error(res.data.message)
+          }
+        }).catch(err => {
+          this.$message.error(err)
+        })
+      },
+      followSB (sb) {
+        this.fetch({
+          url: 'api/followSB',
+          method: 'put',
+          data: {
+            from: this.currentUserInfo.email,
+            to: sb
+          }
+        }).then((res) => {
+          if (res.data.success) {
+            this.$message({
+              message: res.data.message,
+              type: 'success'
+            })
+            this.getCurrentUserInfo()
+          } else {
+            this.$message.error(res.data.message)
+          }
+        }).catch(err => {
+          this.$message.error(err)
+        })
+      },
+      unfollowSB (sb) {
+        this.fetch({
+          url: 'api/unfollowSB',
+          method: 'put',
+          data: {
+            from: this.currentUserInfo.email,
+            to: sb
+          }
+        }).then((res) => {
+          if (res.data.success) {
+            this.$message({
+              message: res.data.message,
+              type: 'success'
+            })
+            this.getCurrentUserInfo()
           } else {
             this.$message.error(res.data.message)
           }
@@ -479,6 +548,7 @@
   .event-page_btns {
     width: 100%;
     text-align: center;
+    margin-top: 20px;
   }
   .event-page_expire-text {
     color: red;

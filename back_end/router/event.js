@@ -7,13 +7,24 @@ const router = express.Router()
 router.use(bodyParser.json())
 
 // common methods
+
+// 推荐算法
+let getRecommendEvents = (req, res) => {
+  let results = []
+
+  res.json({
+    success: true,
+    message: results
+  })
+}
+
 let pageClassify = (req, res) => {
-  console.log(req.query.pageType)
   User.find({
     email: req.query.user
   })
     .then(users => {
       if (req.query.pageType === 'post') {
+        console.log(users[0])
         Event.find({
           'name': {'$in': users[0].hasPost}
         })
@@ -95,23 +106,29 @@ let searchClassify = (req, res) => {
   } else if (queryType === 'hiking') {
     queryType = '旅行'
   }
-  // 类型包含这个关键字，或名字匹配到这个关键字，或者发布者是这个关键字
-  Event.find({'$or': [{'type': queryType}, {'name': queryType}, {'owner': queryType}]})
-    .then(events => {
-      events = events.filter(val => {
-        return val.auth === 1
+
+  if (queryType === 'recommend') {
+    // 若是点击“推荐”类型，则执行另一套算法
+    getRecommendEvents(req, res)
+  } else {
+    // 类型包含这个关键字，或名字匹配到这个关键字，或者发布者是这个关键字
+    Event.find({'$or': [{'type': queryType}, {'name': queryType}, {'owner': queryType}]})
+      .then(events => {
+        events = events.filter(val => {
+          return val.auth === 1
+        })
+        res.json({
+          success: true,
+          message: events
+        })
       })
-      res.json({
-        success: true,
-        message: events
+      .catch(err => {
+        res.json({
+          success: false,
+          message: err
+        })
       })
-    })
-    .catch(err => {
-      res.json({
-        success: false,
-        message: err
-      })
-    })
+  }
 }
 
 let noClassify = (req, res) => {

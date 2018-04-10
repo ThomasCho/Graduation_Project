@@ -11,6 +11,7 @@ const login = require('./router/login')
 const upload = require('./router/upload')
 const verification = require('./router/verification')
 const event = require('./router/event')
+const follow = require('./router/follow')
 
 mongoose.connect('mongodb://localhost:27017/graduationProject')
 
@@ -60,6 +61,7 @@ app.use('/api', login)
 app.use('/api', upload)
 app.use('/api', verification)
 app.use('/api', event)
+app.use('/api', follow)
 
 // 使用 morgan 将请求日志打印到控制台
 app.use(morgan('dev'))

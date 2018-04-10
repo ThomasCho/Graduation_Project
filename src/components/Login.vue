@@ -31,6 +31,9 @@
     name: 'Login',
     data () {
       let validateEmail = (rule, value, callback) => {
+        if (value === 'admin') {
+          callback()
+        }
         if (value === '' || !/^[\d]{2}[a-z]{3,}[\d]?$/.test(value)) {
           callback(new Error('请输入汕大邮箱'))
         } else {

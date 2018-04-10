@@ -113,7 +113,14 @@
       }
     },
     mounted () {
-      this.loadEvent('', this.pageType)
+      if (this.pageType) {
+        // 若是用户打开 我已XX
+        this.loadEvent('', this.pageType)
+      } else {
+        // 若是通过活动墙进来的，默认选择“推荐”类型
+        // this.loadEvent('recommend')
+        this.loadEvent()
+      }
     },
     methods: {
       loadEvent (searchType, pageType) {

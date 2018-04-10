@@ -12,6 +12,9 @@ const getters = {
   hasStar: state => state.user.hasStar,
   hasJoin: state => state.user.hasJoin,
   isAdmin: state => state.user.isAdmin,
+  hobby: state => state.user.hobby,
+  hasFollow: state => state.user.hasFollow,
+  followBy: state => state.user.followBy,
 
   Ename: state => state.event.name,
   date: state => state.event.date,

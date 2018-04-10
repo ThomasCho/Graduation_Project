@@ -50,6 +50,9 @@
           <el-form-item prop="constellation" label="星座">
             <el-input v-model="infoForm.constellation"></el-input>
           </el-form-item>
+          <el-form-item prop="hobby" label="兴趣爱好">
+            <el-input v-model="infoForm.hobby" placeholder="输入爱好，以中文，分割"></el-input>
+          </el-form-item>
           <el-form-item prop="phone" label="手机">
             <el-input v-model="infoForm.phone"></el-input>
           </el-form-item>
@@ -173,7 +176,8 @@
               birthday: res.data.message.birthday,
               constellation: res.data.message.constellation,
               phone: res.data.message.phone,
-              introduction: res.data.message.introduction
+              introduction: res.data.message.introduction,
+              hobby: res.data.message.hobby
             }
           } else {
             this.$message.error(res.data.message)

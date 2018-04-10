@@ -27,6 +27,14 @@
               <i class="el-icon-star-on"></i>
               <span slot="title">我已收藏</span>
             </el-menu-item>
+            <el-menu-item index="/hasFollow" :route="routers.hasFollow">
+              <i class="el-icon-sort-up"></i>
+              <span slot="title">已关注</span>
+            </el-menu-item>
+            <el-menu-item index="/followBy" :route="routers.followBy">
+              <i class="el-icon-sort-down"></i>
+              <span slot="title">被关注</span>
+            </el-menu-item>
             <el-menu-item index="/logout">
               <i class="el-icon-back"></i>
               <span slot="title">退出登录</span>
@@ -44,6 +52,8 @@
 <script>
   import UserInfo from '@/components/UserInfo'
   import UserHas from '@/components/UserHas'
+  import HasFollow from '@/components/HasFollow'
+  import FollowBy from '@/components/FollowBy'
 
   let whiteList = ['/', '/login', '/register', '/forgetPsw']
 
@@ -71,6 +81,18 @@
             path: '/userHas/join',
             component: UserHas
           },
+          hasFollow: {
+            path: '/hasFollow',
+            name: 'hasFollow',
+            title: '已关注',
+            component: HasFollow
+          },
+          followBy: {
+            path: '/followBy',
+            name: 'followBy',
+            title: '被关注',
+            component: FollowBy
+          }
         }
       }
     },
