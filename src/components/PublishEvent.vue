@@ -65,8 +65,8 @@
       </el-form-item>
       <el-form-item label="特殊资源" prop="resource">
         <el-radio-group v-model="form.resource">
-          <el-radio label="线上品牌商赞助"></el-radio>
-          <el-radio label="线下场地免费"></el-radio>
+          <el-radio label="活动组织者提供"></el-radio>
+          <el-radio label="活动参加者自备"></el-radio>
         </el-radio-group>
       </el-form-item>
       <el-form-item label="活动形式" prop="desc">

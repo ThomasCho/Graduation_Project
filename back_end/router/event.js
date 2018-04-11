@@ -4,20 +4,10 @@ const Event = require('../models/event')
 const User = require('../models/user')
 const bodyParser = require('body-parser')
 const router = express.Router()
+const Recommend = require('../common/js/recommend') // 推荐算法
 router.use(bodyParser.json())
 
 // common methods
-
-// 推荐算法
-let getRecommendEvents = (req, res) => {
-  let results = []
-
-  res.json({
-    success: true,
-    message: results
-  })
-}
-
 let pageClassify = (req, res) => {
   User.find({
     email: req.query.user
@@ -109,7 +99,12 @@ let searchClassify = (req, res) => {
 
   if (queryType === 'recommend') {
     // 若是点击“推荐”类型，则执行另一套算法
-    getRecommendEvents(req, res)
+    Recommend.getRecommendEvents(req.query.user).then(results => {
+      res.json({
+        success: true,
+        message: results
+      })
+    })
   } else {
     // 类型包含这个关键字，或名字匹配到这个关键字，或者发布者是这个关键字
     Event.find({'$or': [{'type': queryType}, {'name': queryType}, {'owner': queryType}]})

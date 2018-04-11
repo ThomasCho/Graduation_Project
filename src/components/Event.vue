@@ -4,7 +4,7 @@
       <el-form-item label="发布人">
         <el-card :body-style="{ padding: '0px' }" class="event-page_owner-info"
                  :class="owner.gender === '男' ? 'event-page_card-male' : 'event-page_card-female'">
-          <img :src="owner.avatar" class="event-page_image">
+          <img :src="owner.avatar" class="event-page_image" @click="getPersonPost(owner.email)">
           <div style="padding: 14px;">
             <span>{{owner.name}}</span>
             <div class="event-page_bottom event-page_clearfix">
@@ -63,8 +63,8 @@
                   :offset="index > 0 ? 1 : 0">
             <el-card :body-style="{ padding: '0px' }"
                      :class="person.gender === '男' ? 'event-page_card-male' : 'event-page_card-female'">
-              <img v-if="!person.avatar" src="../assets/img/no_avatar.png" class="event-page_image">
-              <img v-else :src="getPersonAvatar(person.avatar)" class="event-page_image">
+              <img v-if="!person.avatar" src="../assets/img/no_avatar.png" class="event-page_image" @click="getPersonPost(person.email)">
+              <img v-else :src="getPersonAvatar(person.avatar)" class="event-page_image" @click="getPersonPost(person.email)">
               <div style="padding: 14px;">
                 <span>{{person.name}}</span>
                 <div class="event-page_bottom event-page_clearfix">
@@ -474,6 +474,9 @@
         }).catch(err => {
           this.$message.error(err)
         })
+      },
+      getPersonPost (val) {
+        this.$router.push('/eventCard/' + val)
       }
     },
     filters: {
@@ -522,6 +525,7 @@
     width: 100%;
     display: block;
     height: 8vh;
+    cursor: pointer;
   }
 
   .event-page_card-male {

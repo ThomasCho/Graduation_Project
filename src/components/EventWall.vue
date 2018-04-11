@@ -118,8 +118,7 @@
         this.loadEvent('', this.pageType)
       } else {
         // 若是通过活动墙进来的，默认选择“推荐”类型
-        // this.loadEvent('recommend')
-        this.loadEvent()
+        this.loadEvent('recommend')
       }
     },
     methods: {
