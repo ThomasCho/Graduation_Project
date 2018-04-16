@@ -5,6 +5,7 @@
       <img src="../../assets/img/no_result.gif" style="width: 200px;" draggable="false">
     </div>
     <el-card :body-style="{ padding: '0px' }" class="event-card_card" v-for="item in items">
+      <img src="../../assets/img/expired.png" class="event-card_expire-pic" v-show="isExpired(item)">
       <img :src="getImg(item)" class="event-card_image" @click="viewEvent(item)">
       <div style="padding: 14px;">
         <div>{{item.name}}</div>
@@ -129,6 +130,12 @@
         }).catch(err => {
           this.$message.error(err)
         })
+      },
+      isExpired (val) {
+        if ((new Date(val.date) - new Date(val.time[0])) > 0) {
+          val.time[0] = val.date.slice(0, val.date.indexOf('T')) + val.time[0].slice(val.time[0].indexOf('T'))
+        }
+        return (new Date() - new Date(val.time[0])) > 0
       }
     }
   }
@@ -203,5 +210,12 @@
   .event-card_find-no-items {
     text-align: center;
     margin-top: 10vh;
+  }
+
+  .event-card_expire-pic {
+    position: absolute;
+    width: 5%;
+    left: 17%;
+    top: 70px;
   }
 </style>
