@@ -200,6 +200,9 @@ const getRecommendEvents = (userEmail) => {
         return b.score > a.score
       })
       // console.log(mostLikelyEvents)
+      mostLikelyEvents.forEach(e => {
+        console.log('活动名字：' + e.name + '；活动最终得分：' + e.score)
+      })
 
       // 返还最终结果
       if (mostLikelyEvents.length > FINAL_RESULTS_NUM) {

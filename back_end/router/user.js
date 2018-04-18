@@ -7,10 +7,21 @@ router.use(bodyParser.json())
 
 // 获取当前登录用户的信息
 router.get(/user\/info/, (req, res) => {
-  res.json({
-    success: true,
-    message: req.api_user
+  User.find({
+    email: req.query.email
   })
+    .then(users => {
+      res.json({
+        success: true,
+        message: users[0]
+      })
+    })
+    .catch(err => {
+      res.json({
+        success: false,
+        message: err
+      })
+    })
 })
 
 // 查询所有用户

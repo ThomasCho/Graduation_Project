@@ -94,7 +94,7 @@ const user = {
     // 获取用户信息
     GetInfo ({ commit, state }) {
       return new Promise((resolve, reject) => {
-        getInfo(state.token).then(response => {
+        getInfo(state.email).then(response => {
           if (response.data.success) {
             commit('SET_EMAIL', response.data.message.email)
             commit('SET_NAME', response.data.message.name)

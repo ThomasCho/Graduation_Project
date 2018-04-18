@@ -12,11 +12,13 @@ export function loginByEmail (email, password) {
   })
 }
 
-export function getInfo (token) {
+export function getInfo (email) {
   return fetch({
     url: 'api/user/info',
     baseURL: '/',
     method: 'get',
-    params: { token }
+    params: {
+      email
+    }
   })
 }

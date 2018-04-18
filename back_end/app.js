@@ -15,16 +15,17 @@ const follow = require('./router/follow')
 
 mongoose.connect('mongodb://localhost:27017/graduationProject')
 
+// 请求地址白名单
 let apiWhiteList = ['/api/loginbyemail', '/api/user/register', '/api/user/forgetPsw',
   '/api/verification', '/api/verifyUserAndPhone', '/api/verifyCode']
 
-// 只要参数有token或者头信息里有x-access-token，我们就认定它是一个api接口，
+// 验证头信息里有没有x-access-token
 // 校验通过了，就把token的decode对象，也就是之前加密的用户对象返回来，保存为req.api_user
 // 没有挂载路径的中间件，应用的每个请求都会执行该中间件
 app.use((req, res, next) => {
   console.log(req.url) // for debug
   // 检查post的信息或者url查询参数或者头信息
-  let token = (req.body && req.body.token) || req.query.token || req.headers['x-access-token']
+  let token = req.headers['x-access-token']
 
   // 解析 token
   if (token) {
