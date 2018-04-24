@@ -5,7 +5,7 @@
       <div>这里没有人~</div>
       <img src="../assets/img/no_result.gif" style="width: 200px;" draggable="false">
     </div>
-    <el-card :body-style="{ padding: '0px' }" v-for="person in items" class="follow-page_card"
+    <el-card :body-style="{ padding: '0px' }" v-for="person in items" class="follow-page_card" :key="person.name"
              :class="person.gender === '男' ? 'follow-page_card-male' : 'follow-page_card-female'">
       <img v-if="!person.avatar" src="../assets/img/no_avatar.png" class="follow-page_image" @click="getPersonPost(person.email)">
       <img v-else :src="getPersonAvatar(person.avatar)" class="follow-page_image" @click="getPersonPost(person.email)">

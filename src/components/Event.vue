@@ -112,8 +112,7 @@
                      @click="handleJoin" :disabled="isExpired(item)">
             {{canJoin ? '参加' : '撤销参加'}}
           </el-button>
-          <el-button type="danger" icon="el-icon-arrow-left" round
-                     @click="handleBack" :disabled="isExpired(item)">
+          <el-button type="danger" icon="el-icon-arrow-left" round @click="handleBack">
             返回
           </el-button>
           <el-button type="warning" icon="el-icon-star-off" round

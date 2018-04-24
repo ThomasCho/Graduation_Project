@@ -31,21 +31,12 @@ router.post('/verification', (req, res) => {
     mobile: req.body.phone,
     text: '【STU活动平台】您的验证码是' + randomCode + '。如非本人操作，请忽略本短信'
   }).then((result) => {
-    console.log(result)
-    console.log(req.session)
     req.session[req.body.phone] = randomCode
     console.log(req.session)
     res.json({
       success: true,
       message: result
     })
-  })
-
-  req.session[req.body.phone] = randomCode
-  console.log(req.session)
-  res.json({
-    success: true,
-    message: randomCode
   })
 })
 

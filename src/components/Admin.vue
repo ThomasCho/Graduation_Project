@@ -54,7 +54,6 @@
 
   .admin-page_card-container {
     width: 100%;
-    white-space: normal;
   }
 
   .admin-page_card-container:after {

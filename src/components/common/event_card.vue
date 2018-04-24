@@ -1,14 +1,14 @@
 <template>
-  <div style="padding: 20px">
+  <div style="padding: 20px; overflow: hidden;">
     <div v-if="!items.length" class="event-card_find-no-items">
       <div>没有活动耶~</div>
       <img src="../../assets/img/no_result.gif" style="width: 200px;" draggable="false">
     </div>
-    <el-card :body-style="{ padding: '0px' }" class="event-card_card" v-for="item in items">
+    <el-card :body-style="{ padding: '0px' }" class="event-card_card" v-for="item in items" :key="item.name">
       <img src="../../assets/img/expired.png" class="event-card_expire-pic" v-show="isExpired(item)">
-      <img :src="getImg(item)" class="event-card_image" @click="viewEvent(item)">
+      <div class="event-card_image" :style="getPosterStyle(item)" @click="viewEvent(item)"></div>
       <div style="padding: 14px;">
-        <div>{{item.name}}</div>
+        <div class="event-card_event-name">{{item.name}}</div>
         <div class="event-card_user-name">{{item.owner}}</div>
         <div class="event-card_bottom clearfix">
           <div><time class="event-card_time">{{ showTime(item) }}</time></div>
@@ -62,9 +62,6 @@
         }).catch(err => {
           this.$message.error(err)
         })
-      },
-      getImg (val) {
-        return 'http://localhost:3000/img/poster' + val.poster
       },
       viewEvent (val) {
         localStorage.setItem('currentEvent', JSON.stringify(val))
@@ -136,6 +133,13 @@
           val.time[0] = val.date.slice(0, val.date.indexOf('T')) + val.time[0].slice(val.time[0].indexOf('T'))
         }
         return (new Date() - new Date(val.time[0])) > 0
+      },
+      getPosterStyle (item) {
+        return {
+          backgroundImage: 'url(http://localhost:3000/img/poster' + item.poster + ')',
+          backgroundSize: 'cover',
+          backgroundPosition: 'center'
+        }
       }
     }
   }
@@ -146,6 +150,8 @@
     width: 20%;
     float: left;
     margin: 0 3% 20px 0;
+    position: relative;
+    overflow: visible;
   }
 
   .event-card_card:hover {
@@ -188,6 +194,10 @@
     font-size: 0.9rem;
   }
 
+  .event-card_event-name {
+    font-size: 0.9rem;
+  }
+
   .event-card_time {
     font-size: 13px;
     color: #999;
@@ -214,8 +224,8 @@
 
   .event-card_expire-pic {
     position: absolute;
-    width: 5%;
-    left: 17%;
-    top: 70px;
+    width: 30%;
+    left: 76%;
+    top: -20px;
   }
 </style>

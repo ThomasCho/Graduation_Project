@@ -81,6 +81,7 @@ const user = {
             Cookies.set('x-access-token', response.data.token)
             commit('SET_TOKEN', response.data.token)
             commit('SET_EMAIL', userInfo.email.trim())
+            window.localStorage.setItem('email', userInfo.email.trim())
             resolve(response.data)
           } else {
             reject(response.data.message)
@@ -94,7 +95,7 @@ const user = {
     // 获取用户信息
     GetInfo ({ commit, state }) {
       return new Promise((resolve, reject) => {
-        getInfo(state.email).then(response => {
+        getInfo(window.localStorage.getItem('email')).then(response => {
           if (response.data.success) {
             commit('SET_EMAIL', response.data.message.email)
             commit('SET_NAME', response.data.message.name)
