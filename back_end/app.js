@@ -6,6 +6,7 @@ const jwt = require('jsonwebtoken')
 const cors = require('cors')
 const bodyParser = require('body-parser')
 
+const index = require('./router/index')
 const user = require('./router/user')
 const login = require('./router/login')
 const upload = require('./router/upload')
@@ -57,6 +58,7 @@ app.use((req, res, next) => {
 })
 
 // 将路由挂载到应用
+app.use(index)
 app.use('/api', user)
 app.use('/api', login)
 app.use('/api', upload)

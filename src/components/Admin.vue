@@ -5,6 +5,7 @@
       <el-button type="primary" size="mini" class="admin-page_sign-out" @click="signOut">切换账号</el-button>
       <el-button type="danger" size="mini" class="admin-page_sign-out" @click="getUnAuthEvent">未授权活动</el-button>
       <el-button type="success" size="mini" class="admin-page_sign-out" @click="getAuthEvent">已授权活动</el-button>
+      <el-button type="warning" size="mini" class="admin-page_sign-out" @click="viewDataAnalysis">数据统计分析</el-button>
     </div>
     <div class="admin-page_card-container">
       <event-card ref="eventCard"></event-card>
@@ -36,6 +37,9 @@
         this.$store.dispatch('LogOut').then(() => {
           this.$router.push({ path: '/' })
         })
+      },
+      viewDataAnalysis () {
+        this.$router.push({ path: '/dataAnalysis' })
       }
     }
   }

@@ -14,6 +14,7 @@ import Admin from '@/components/Admin'
 import HasFollow from '@/components/HasFollow'
 import FollowBy from '@/components/FollowBy'
 import EventCard from '@/components/common/event_card'
+import DataAnalysis from '@/components/DataAnalysis'
 
 Vue.use(Router)
 
@@ -109,6 +110,12 @@ export default new Router({
       name: 'eventCard',
       title: '活动卡片',
       component: EventCard
+    },
+    {
+      path: '/dataAnalysis',
+      name: 'dataAnalysis',
+      title: '数据统计分析',
+      component: DataAnalysis
     },
     {
       path: '*',

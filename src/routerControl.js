@@ -7,8 +7,8 @@ router.beforeEach((to, from, next) => {
     // 拉取user_info
     store.dispatch('GetInfo')
       .then(() => {
-        if (store.getters.isAdmin === 1 && to.path !== '/admin' && to.path !== '/event') {
-          // 如果管理员跳转到 /admin 或 /event 页面以外的页面，则重导向回 /admin 页面
+        if (store.getters.isAdmin === 1 && to.path !== '/admin' && to.path !== '/event' && to.path !== '/dataAnalysis') {
+          // 如果管理员跳转到 /admin 或 /event 或 /dataAnalysis 页面以外的页面，则重导向回 /admin 页面
           next({path: '/admin'})
         } else if (to.path === '/login' || to.path === '/') {
           next({path: '/main'})

@@ -9,9 +9,11 @@ import 'element-ui/lib/theme-chalk/index.css'
 import './routerControl.js'
 import fetch from './util/fetch'
 import VueAMap from 'vue-amap'
+import ECharts from 'echarts'
 
 Vue.use(ElementUI)
 Vue.use(VueAMap)
+
 VueAMap.initAMapApiLoader({
   key: 'fe57c17d09cdcee28e0b3ba77620629c',
   plugin: ['Geolocation', 'Scale'],
@@ -21,6 +23,7 @@ VueAMap.initAMapApiLoader({
 
 Vue.config.productionTip = false
 Vue.prototype.fetch = fetch
+Vue.prototype.$echarts = ECharts
 
 /* eslint-disable no-new */
 const vue = new Vue({
