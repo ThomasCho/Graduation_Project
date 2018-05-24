@@ -19,9 +19,6 @@ let pageClassify = (req, res) => {
           'name': {'$in': users[0].hasPost}
         })
           .then(events => {
-            events = events.filter(val => {
-              return val.auth === 1
-            })
             res.json({
               success: true,
               message: events
@@ -106,8 +103,9 @@ let searchClassify = (req, res) => {
       })
     })
   } else {
-    // 类型包含这个关键字，或名字匹配到这个关键字，或者发布者是这个关键字
-    Event.find({'$or': [{'type': queryType}, {'name': queryType}, {'owner': queryType}]})
+    // 类型包含这个关键字，或名字匹配到这个关键字，或者发布者email是这个关键字
+    let re = new RegExp(queryType, 'gi') // re为/queryType/gi
+    Event.find({'$or': [{'type': re}, {'name': re}, {'owner': queryType}]})
       .then(events => {
         events = events.filter(val => {
           return val.auth === 1

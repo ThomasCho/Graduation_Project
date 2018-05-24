@@ -71,7 +71,7 @@ router.get('/user/:email', (req, res) => {
 router.post('/user/register', (req, res) => {
   // 使用User model上的create方法储存数据
   let newUser = JSON.parse(JSON.stringify(req.body))
-  newUser.name = newUser.gender = newUser.birthday = newUser.introduction = newUser.avatar = newUser.constellation = ''
+  newUser.name = newUser.gender = newUser.birthday = newUser.introduction = newUser.avatar = newUser.constellation = newUser.hobby = ''
   newUser.hasPost = newUser.hasStar = newUser.hasJoin = newUser.hasFollow = newUser.followBy = []
   newUser.isAdmin = 0
   console.log(newUser)
@@ -173,21 +173,6 @@ router.put('/user/modPsw/:email', (req, res) => {
         message: err
       })
     })
-})
-
-// 删除一个用户
-router.delete('/user/:email', (req, res) => {
-  User.findOneAndRemove({
-    email: req.params.email
-  })
-    .then(user => res.send({
-      success: true,
-      message: `${user.title}删除成功`
-    }))
-    .catch(err => res.json({
-      success: false,
-      message: err
-    }))
 })
 
 module.exports = router

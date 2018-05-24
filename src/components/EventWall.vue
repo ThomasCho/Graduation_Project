@@ -182,16 +182,16 @@
       convertDate (val) {
         let date = new Date(val)
         let Y = date.getFullYear() + '-'
-        let M = (date.getMonth() + 1 < 10 ? '0' + (date.getMonth() + 1) : date.getMonth() + 1) + '-'
+        let M = date.getMonth() + '-'
         let D = date.getDate() + ' '
 
         return Y + M + D
       },
       convertTime (val) {
         let date = new Date(val)
-        let h = date.getHours() + ':'
-        let m = date.getMinutes() + ':'
-        let s = date.getSeconds()
+        let h = (date.getHours() + 1 < 10 ? '0' + (date.getHours() + 1) : date.getHours() + 1) + ':'
+        let m = (date.getMinutes() + 1 < 10 ? '0' + (date.getMinutes() + 1) : date.getMinutes() + 1) + ':'
+        let s = (date.getSeconds() + 1 < 10 ? '0' + (date.getSeconds() + 1) : date.getSeconds() + 1)
 
         return h + m + s
       },
@@ -205,11 +205,10 @@
       search () {
         this.loadEvent(this.searchWord)
       },
-      isExpired (val) {
-        if ((new Date(val.date) - new Date(val.time[0])) > 0) {
-          val.time[0] = val.date.slice(0, val.date.indexOf('T')) + val.time[0].slice(val.time[0].indexOf('T'))
-        }
-        return (new Date() - new Date(val.time[0])) > 0
+      isExpired (item) {
+        // item.date和item.time的日期是不同的，我要的是item.date的日期部分 + item.time的时间部分
+        item.time[0] = item.date.slice(0, item.date.indexOf('T')) + item.time[0].slice(item.time[0].indexOf('T'))
+        return (new Date() - new Date(item.time[0])) > 0
       },
       unpostEvent (item) {
         this.fetch({

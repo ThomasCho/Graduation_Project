@@ -39,7 +39,7 @@
         {{showTime(item)}}
       </el-form-item>
       <el-form-item label="收费" class="event-page_form-money">
-        {{item.isCharged ? '免费' : '￥' + item.money}}
+        {{item.isCharged ? '￥' + item.money : '免费'}}
       </el-form-item>
       <el-form-item label="活动类型">
         {{item.type | convertType}}
@@ -196,16 +196,16 @@
       convertDate (val) {
         let date = new Date(val)
         let Y = date.getFullYear() + '-'
-        let M = (date.getMonth() + 1 < 10 ? '0' + (date.getMonth() + 1) : date.getMonth() + 1) + '-'
+        let M = date.getMonth() + '-'
         let D = date.getDate() + ' '
 
         return Y + M + D
       },
       convertTime (val) {
         let date = new Date(val)
-        let h = date.getHours() + ':'
-        let m = date.getMinutes() + ':'
-        let s = date.getSeconds()
+        let h = (date.getHours() + 1 < 10 ? '0' + (date.getHours() + 1) : date.getHours() + 1) + ':'
+        let m = (date.getMinutes() + 1 < 10 ? '0' + (date.getMinutes() + 1) : date.getMinutes() + 1) + ':'
+        let s = (date.getSeconds() + 1 < 10 ? '0' + (date.getSeconds() + 1) : date.getSeconds() + 1)
 
         return h + m + s
       },
@@ -354,10 +354,8 @@
         })
       },
       isExpired (item) {
-        // 因item.date和item.time是没有关联的，所以有可能会出现item.time的日期部分早于item.date的日期部分，所以要先预处理
-        if ((new Date(item.date) - new Date(item.time[0])) > 0) {
-          item.time[0] = item.date.slice(0, item.date.indexOf('T')) + item.time[0].slice(item.time[0].indexOf('T'))
-        }
+        // item.date和item.time的日期是不同的，我要的是item.date的日期部分 + item.time的时间部分
+        item.time[0] = item.date.slice(0, item.date.indexOf('T')) + item.time[0].slice(item.time[0].indexOf('T'))
         return (new Date() - new Date(item.time[0])) > 0
       },
       getOwnerInfo () {
@@ -392,12 +390,8 @@
           method: 'get'
         }).then((res) => {
           if (res.data.success) {
-            if (res.data.message.hasJoin.indexOf(this.item.name) !== -1) {
-              this.canJoin = false
-            }
-            if (res.data.message.hasStar.indexOf(this.item.name) !== -1) {
-              this.canStar = false
-            }
+            this.canJoin = res.data.message.hasJoin.indexOf(this.item.name) === -1
+            this.canStar = res.data.message.hasJoin.indexOf(this.item.name) === -1
           } else {
             this.$message.error(res.data.message)
           }
