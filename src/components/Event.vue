@@ -106,7 +106,7 @@
           <span class="event-page_comment-word">{{val.word}}</span>
         </div>
       </el-card>
-      <div class="event-page_btns">
+      <div class="event-page_btns" v-show="curEmail !== 'admin'">
         <el-button-group>
           <el-button type="success" icon="el-icon-check" round
                      @click="handleJoin" :disabled="isExpired(item)">
@@ -142,7 +142,8 @@
         canJoin: true,
         canStar: true,
         commentWord: '',
-        currentUserInfo: {}
+        currentUserInfo: {},
+        curEmail: this.$store.getters.email
       }
     },
     computed: {
@@ -221,7 +222,7 @@
       },
       getCurrentUserInfo () {
         this.fetch({
-          url: 'api/user/' + this.$store.getters.email,
+          url: 'api/user/' + this.curEmail,
           method: 'get'
         })
           .then((res) => {
